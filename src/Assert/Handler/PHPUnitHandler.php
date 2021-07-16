@@ -8,6 +8,8 @@ use Zenstruck\Assert\Handler;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
+ *
+ * @internal
  */
 final class PHPUnitHandler implements Handler
 {
