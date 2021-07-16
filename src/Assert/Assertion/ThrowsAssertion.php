@@ -10,13 +10,13 @@ use Zenstruck\Assert\AssertionFailed;
 final class ThrowsAssertion
 {
     /** @var string */
-    private $expectedException;
+    private $expected;
 
     /** @var callable */
-    private $what;
+    private $during;
 
     /** @var callable[] */
-    private $after;
+    private $onCatch;
 
     /** @var string */
     private $notThrownMessage = 'No exception thrown. Expected "%s".';
@@ -30,24 +30,24 @@ final class ThrowsAssertion
     /** @var string[] */
     private $mismatchArgs = [];
 
-    private function __construct(string $expectedException, callable $what, callable $after)
+    private function __construct(string $expected, callable $during, callable $onCatch)
     {
-        $this->expectedException = $expectedException;
-        $this->what = $what;
-        $this->after = [$after];
+        $this->expected = $expected;
+        $this->during = $during;
+        $this->onCatch = [$onCatch];
     }
 
     public function __invoke(): void
     {
         try {
-            ($this->what)();
+            ($this->during)();
         } catch (\Throwable $exception) {
-            if (!$exception instanceof $this->expectedException) {
-                AssertionFailed::throw($this->mismatchMessage, ...($this->mismatchArgs ?: [$this->expectedException]));
+            if (!$exception instanceof $this->expected) {
+                AssertionFailed::throw($this->mismatchMessage, ...($this->mismatchArgs ?: [$this->expected]));
             }
 
-            foreach ($this->after as $after) {
-                $after($exception);
+            foreach ($this->onCatch as $callback) {
+                $callback($exception);
             }
 
             return;
@@ -62,12 +62,12 @@ final class ThrowsAssertion
      *                                                    to determine the expected exception class. When
      *                                                    exception is caught, callable is invoked with
      *                                                    the caught exception {@see onCatch()}
-     * @param callable                         $what      Considered a "fail" if when invoked,
-     *                                                    $expectedException isn't thrown
+     * @param callable                         $during    Considered a "fail" if when invoked,
+     *                                                    $exception isn't thrown
      */
-    public static function expect($exception, callable $what): self
+    public static function expect($exception, callable $during): self
     {
-        $after = static function() {};
+        $onCatch = static function() {};
 
         if (\is_callable($exception)) {
             $parameterRef = (new \ReflectionFunction(\Closure::fromCallable($exception)))->getParameters()[0] ?? null;
@@ -76,11 +76,11 @@ final class ThrowsAssertion
                 throw new \InvalidArgumentException('When $exception is a callback, the first parameter must be type-hinted as the expected exception.');
             }
 
-            $after = $exception;
+            $onCatch = $exception;
             $exception = $type->getName();
         }
 
-        return new self($exception, $what, $after);
+        return new self($exception, $during, $onCatch);
     }
 
     /**
@@ -93,7 +93,7 @@ final class ThrowsAssertion
      */
     public function onCatch(callable $callback): self
     {
-        $this->after[] = $callback;
+        $this->onCatch[] = $callback;
 
         return $this;
     }

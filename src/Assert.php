@@ -60,9 +60,9 @@ final class Assert
     /**
      * @see ThrowsAssertion::expect()
      */
-    public static function throws($exception, callable $what): void
+    public static function throws($exception, callable $during): void
     {
-        self::that(ThrowsAssertion::expect($exception, $what));
+        self::that(ThrowsAssertion::expect($exception, $during));
     }
 
     /**
