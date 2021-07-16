@@ -3,6 +3,7 @@
 namespace Zenstruck\Assert\Tests\Handler;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
 use Zenstruck\Assert\Tests\ResetHandler;
@@ -28,5 +29,24 @@ final class PHPUnitHandlerTest extends TestCase
         Assert::throws(function() { throw new \RuntimeException(); }, function(\RuntimeException $e) {});
 
         $this->assertSame(5, PHPUnit::getCount() - $initialPHPUnitAssertionCount);
+    }
+
+    /**
+     * @test
+     */
+    public function php_unit_is_auto_detected_and_failing_assertion_triggers_php_unit_failure(): void
+    {
+        $initialPHPUnitAssertionCount = PHPUnit::getCount();
+
+        try {
+            Assert::true(false, 'this fails');
+        } catch (AssertionFailedError $e) {
+            $this->assertSame(1, PHPUnit::getCount() - $initialPHPUnitAssertionCount, 'The failure should trigger an assertion count');
+            $this->assertSame('this fails', $e->getMessage());
+
+            return;
+        }
+
+        PHPUnit::fail('No PHPUnit failure.');
     }
 }
