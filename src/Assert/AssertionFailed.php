@@ -28,7 +28,7 @@ final class AssertionFailed extends \RuntimeException
     /**
      * @psalm-return no-return
      */
-    public function throwWith(\Throwable $previous, string $message, string ...$args): void
+    public static function throwWith(\Throwable $previous, string $message, string ...$args): void
     {
         throw new self(\sprintf($message, ...$args), 0, $previous);
     }

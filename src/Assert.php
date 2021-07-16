@@ -2,6 +2,7 @@
 
 namespace Zenstruck;
 
+use Zenstruck\Assert\Assertion\ThrowsAssertion;
 use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Handler;
 
@@ -57,45 +58,11 @@ final class Assert
     }
 
     /**
-     * @param callable                         $what              Considered a "fail" if when invoked,
-     *                                                            $expectedException isn't thrown
-     * @param string|callable(\Throwable):void $expectedException string: class name of the expected exception
-     *                                                            callable: uses the first argument's type-hint
-     *                                                            to determine the expected exception class. When
-     *                                                            exception is caught, callable is invoked with
-     *                                                            the caught exception (useful for making follow-
-     *                                                            up assertions on the exception and side-effect
-     *                                                            assertions)
+     * @see ThrowsAssertion::expect()
      */
-    public static function throws(callable $what, $expectedException): void
+    public static function throws($exception, callable $what): void
     {
-        $postCallback = static function() {};
-
-        if (\is_callable($expectedException)) {
-            $parameterRef = (new \ReflectionFunction(\Closure::fromCallable($expectedException)))->getParameters()[0] ?? null;
-
-            if (!$parameterRef || !($type = $parameterRef->getType()) instanceof \ReflectionNamedType) {
-                throw new \InvalidArgumentException('When $expectedException is a callback, the first parameter must be type-hinted as the expected exception.');
-            }
-
-            $expectedException = $type->getName();
-        }
-
-        self::that(function() use ($what, $expectedException, $postCallback) {
-            try {
-                $what();
-            } catch (\Throwable $exception) {
-                if ($exception instanceof $expectedException) {
-                    $postCallback();
-
-                    return;
-                }
-
-                AssertionFailed::throw('Exception "%s" thrown but expected "%s".', \get_class($exception), $expectedException);
-            }
-
-            AssertionFailed::throw('No exception thrown. Expected "%s".', $expectedException);
-        });
+        self::that(ThrowsAssertion::expect($exception, $what));
     }
 
     /**
