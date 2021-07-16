@@ -4,7 +4,7 @@ namespace Zenstruck\Assert\Tests\Handler;
 
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
-use Zenstruck\Assert\Exception\AssertionFailed;
+use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Handler\DefaultHandler;
 use Zenstruck\Assert\Tests\ResetHandler;
 

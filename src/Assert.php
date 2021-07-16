@@ -2,7 +2,7 @@
 
 namespace Zenstruck;
 
-use Zenstruck\Assert\Exception\AssertionFailed;
+use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Handler;
 
 /**
@@ -15,7 +15,7 @@ final class Assert
 
     /**
      * @param callable():void $assertion Considered a "pass" if invoked successfully
-     *                                   Considered a "fail" if {@see AssertionFailed} is thrown
+     *                                   Considered a "fail" if {@see \Zenstruck\Assert\AssertionFailed} is thrown
      */
     public static function that(callable $assertion): void
     {

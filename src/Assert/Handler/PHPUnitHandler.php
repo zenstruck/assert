@@ -3,7 +3,7 @@
 namespace Zenstruck\Assert\Handler;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use Zenstruck\Assert\Exception\AssertionFailed;
+use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Handler;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Zenstruck\Assert\Handler;
 
-use Zenstruck\Assert\Exception\AssertionFailed;
+use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Handler;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\Assert\Exception;
+namespace Zenstruck\Assert;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

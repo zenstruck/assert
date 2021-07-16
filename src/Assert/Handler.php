@@ -2,8 +2,6 @@
 
 namespace Zenstruck\Assert;
 
-use Zenstruck\Assert\Exception\AssertionFailed;
-
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
