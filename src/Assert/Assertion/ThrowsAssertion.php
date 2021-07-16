@@ -61,9 +61,7 @@ final class ThrowsAssertion
      *                                                    callable: uses the first argument's type-hint
      *                                                    to determine the expected exception class. When
      *                                                    exception is caught, callable is invoked with
-     *                                                    the caught exception (useful for making follow-
-     *                                                    up assertions on the exception and side-effect
-     *                                                    assertions)
+     *                                                    the caught exception {@see onCatch()}
      * @param callable                         $what      Considered a "fail" if when invoked,
      *                                                    $expectedException isn't thrown
      */
@@ -85,6 +83,24 @@ final class ThrowsAssertion
         return new self($exception, $what, $after);
     }
 
+    /**
+     * Invoked after the expected exception was successfully caught
+     * with the exception as an argument. Can be used to perform
+     * additional assertions on the exception itself or side-effect
+     * assertions.
+     *
+     * @param callable(\Throwable):void $callback
+     */
+    public function onCatch(callable $callback): self
+    {
+        $this->after[] = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Customize the failure message if no exception was thrown.
+     */
     public function ifNotThrown(string $message, string ...$args): self
     {
         $this->notThrownMessage = $message;
@@ -93,6 +109,10 @@ final class ThrowsAssertion
         return $this;
     }
 
+    /**
+     * Customize the failure message the exception thrown does not match
+     * (or is not an instance of) the expected exception class.
+     */
     public function ifMismatch(string $message, string ...$args): self
     {
         $this->mismatchMessage = $message;
