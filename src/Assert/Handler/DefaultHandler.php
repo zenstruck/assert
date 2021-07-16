@@ -1,0 +1,22 @@
+<?php
+
+namespace Zenstruck\Assert\Handler;
+
+use Zenstruck\Assert\Exception\AssertionFailed;
+use Zenstruck\Assert\Handler;
+
+/**
+ * @author Kevin Bond <kevinbond@gmail.com>
+ */
+final class DefaultHandler implements Handler
+{
+    public function onSuccess(): void
+    {
+        // noop
+    }
+
+    public function onFailure(AssertionFailed $exception): void
+    {
+        throw $exception;
+    }
+}

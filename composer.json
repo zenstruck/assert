@@ -1,0 +1,30 @@
+{
+    "name": "zenstruck/assert",
+    "description": "Standalone, lightweight, test framework agnostic *test assertion* library.",
+    "homepage": "https://github.com/zenstruck/assert",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["test", "assertion", "phpunit"],
+    "authors": [
+        {
+            "name": "Kevin Bond",
+            "email": "kevinbond@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.5"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^5.3"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": { "Zenstruck\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Zenstruck\\Assert\\Tests\\": "tests/" }
+    }
+}
