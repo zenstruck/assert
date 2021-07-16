@@ -17,7 +17,7 @@ final class PHPUnitHandlerTest extends TestCase
     /**
      * @test
      */
-    public function phpunit_is_auto_detected_and_passing_assertions_add_to_assert_count(): void
+    public function php_unit_is_auto_detected_and_passing_assertions_add_to_assert_count(): void
     {
         $initialPHPUnitAssertionCount = PHPUnit::getCount();
 
