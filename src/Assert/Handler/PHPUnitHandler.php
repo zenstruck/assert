@@ -24,7 +24,7 @@ final class PHPUnitHandler implements Handler
         PHPUnit::fail($exception->getMessage());
     }
 
-    public static function supported(): bool
+    public static function isSupported(): bool
     {
         return \class_exists(PHPUnit::class);
     }

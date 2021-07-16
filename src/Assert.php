@@ -79,7 +79,7 @@ final class Assert
             return self::$handler;
         }
 
-        if (Handler\PHPUnitHandler::supported()) {
+        if (Handler\PHPUnitHandler::isSupported()) {
             return self::$handler = new Handler\PHPUnitHandler();
         }
 
