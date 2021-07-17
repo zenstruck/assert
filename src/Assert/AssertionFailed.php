@@ -7,9 +7,14 @@ namespace Zenstruck\Assert;
  */
 final class AssertionFailed extends \RuntimeException
 {
-    public function __construct(string $message, int $code = 0, ?\Throwable $previous = null)
+    /** @var array */
+    private $context;
+
+    public function __construct(string $message, array $context = [], ?\Throwable $previous = null)
     {
-        parent::__construct($message, $code, $previous);
+        $this->context = $context;
+
+        parent::__construct(\sprintf($message, ...$context), 0, $previous);
     }
 
     public function __invoke(): void
@@ -18,18 +23,17 @@ final class AssertionFailed extends \RuntimeException
     }
 
     /**
+     * Create and throw.
+     *
      * @psalm-return no-return
      */
-    public static function throw(string $message, string ...$args): void
+    public static function throw(string $message, array $context = [], ?\Throwable $previous = null): void
     {
-        throw new self(\sprintf($message, ...$args));
+        throw new self($message, $context, $previous);
     }
 
-    /**
-     * @psalm-return no-return
-     */
-    public static function throwWith(\Throwable $previous, string $message, string ...$args): void
+    public function getContext(): array
     {
-        throw new self(\sprintf($message, ...$args), 0, $previous);
+        return $this->context;
     }
 }

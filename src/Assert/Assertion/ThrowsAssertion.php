@@ -22,13 +22,13 @@ final class ThrowsAssertion
     private $notThrownMessage = 'No exception thrown. Expected "%s".';
 
     /** @var string[] */
-    private $notThrownArgs = [];
+    private $notThrownContext = [];
 
     /** @var string */
     private $mismatchMessage = 'No exception thrown. Expected "%s".';
 
     /** @var string[] */
-    private $mismatchArgs = [];
+    private $mismatchContext = [];
 
     private function __construct(string $expected, callable $during, callable $onCatch)
     {
@@ -43,7 +43,7 @@ final class ThrowsAssertion
             ($this->during)();
         } catch (\Throwable $exception) {
             if (!$exception instanceof $this->expected) {
-                AssertionFailed::throw($this->mismatchMessage, ...($this->mismatchArgs ?: [$this->expected]));
+                AssertionFailed::throw($this->mismatchMessage, $this->mismatchContext ?: [$this->expected]);
             }
 
             foreach ($this->onCatch as $callback) {
@@ -53,7 +53,7 @@ final class ThrowsAssertion
             return;
         }
 
-        AssertionFailed::throw($this->notThrownMessage, ...($this->notThrownArgs ?: [$this->notThrownArgs]));
+        AssertionFailed::throw($this->notThrownMessage, $this->notThrownContext ?: [$this->notThrownContext]);
     }
 
     /**
@@ -101,10 +101,10 @@ final class ThrowsAssertion
     /**
      * Customize the failure message if no exception was thrown.
      */
-    public function ifNotThrown(string $message, string ...$args): self
+    public function ifNotThrown(string $message, array $context = []): self
     {
         $this->notThrownMessage = $message;
-        $this->notThrownArgs = $args;
+        $this->notThrownContext = $context;
 
         return $this;
     }
@@ -113,10 +113,10 @@ final class ThrowsAssertion
      * Customize the failure message the exception thrown does not match
      * (or is not an instance of) the expected exception class.
      */
-    public function ifMismatch(string $message, string ...$args): self
+    public function ifMismatch(string $message, array $context = []): self
     {
         $this->mismatchMessage = $message;
-        $this->mismatchArgs = $args;
+        $this->mismatchContext = $context;
 
         return $this;
     }

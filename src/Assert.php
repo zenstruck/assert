@@ -32,11 +32,11 @@ final class Assert
     /**
      * @param bool $expression "pass" if true, "fail" if false
      */
-    public static function true(bool $expression, string $message, string ...$args): void
+    public static function true(bool $expression, string $message, array $context = []): void
     {
-        self::that(static function() use ($expression, $message, $args) {
+        self::that(static function() use ($expression, $message, $context) {
             if (!$expression) {
-                AssertionFailed::throw($message, ...$args);
+                AssertionFailed::throw($message, $context);
             }
         });
     }
@@ -44,17 +44,17 @@ final class Assert
     /**
      * @param bool $expression "pass" if false, "fail" if true
      */
-    public static function false(bool $expression, string $message, string ...$args): void
+    public static function false(bool $expression, string $message, array $context = []): void
     {
-        self::true(!$expression, $message, ...$args);
+        self::true(!$expression, $message, $context);
     }
 
     /**
      * Trigger a generic assertion failure.
      */
-    public static function fail(string $message, string ...$args): void
+    public static function fail(string $message, array $context = []): void
     {
-        self::that(new AssertionFailed(\sprintf($message, ...$args)));
+        self::that(new AssertionFailed(\sprintf($message, $context)));
     }
 
     /**
