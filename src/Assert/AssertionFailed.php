@@ -14,7 +14,7 @@ final class AssertionFailed extends \RuntimeException
     {
         $this->context = $context;
 
-        parent::__construct(\sprintf($message, ...$context), 0, $previous);
+        parent::__construct(self::createMessage($message, $context), 0, $previous);
     }
 
     public function __invoke(): void
@@ -35,5 +35,10 @@ final class AssertionFailed extends \RuntimeException
     public function getContext(): array
     {
         return $this->context;
+    }
+
+    private static function createMessage(string $template, array $context): string
+    {
+        return $context ? \sprintf($template, ...$context) : $template;
     }
 }

@@ -25,7 +25,7 @@ final class ThrowsAssertion
     private $notThrownContext = [];
 
     /** @var string */
-    private $mismatchMessage = 'No exception thrown. Expected "%s".';
+    private $mismatchMessage = 'Expected "%s" to be thrown but got "%s".';
 
     /** @var string[] */
     private $mismatchContext = [];
@@ -43,7 +43,10 @@ final class ThrowsAssertion
             ($this->during)();
         } catch (\Throwable $exception) {
             if (!$exception instanceof $this->expected) {
-                AssertionFailed::throw($this->mismatchMessage, $this->mismatchContext ?: [$this->expected]);
+                AssertionFailed::throw(
+                    $this->mismatchMessage,
+                    $this->mismatchContext ?: [$this->expected, \get_class($exception)]
+                );
             }
 
             foreach ($this->onCatch as $callback) {
@@ -53,7 +56,7 @@ final class ThrowsAssertion
             return;
         }
 
-        AssertionFailed::throw($this->notThrownMessage, $this->notThrownContext ?: [$this->notThrownContext]);
+        AssertionFailed::throw($this->notThrownMessage, $this->notThrownContext ?: [$this->expected]);
     }
 
     /**

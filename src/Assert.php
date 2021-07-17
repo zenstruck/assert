@@ -54,7 +54,7 @@ final class Assert
      */
     public static function fail(string $message, array $context = []): void
     {
-        self::that(new AssertionFailed(\sprintf($message, $context)));
+        self::that(new AssertionFailed($message, $context));
     }
 
     /**
