@@ -34,7 +34,7 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectExceptionMessage('custom message RuntimeException');
 
         ThrowsAssertion::expect(\RuntimeException::class, function() {})
-            ->ifNotThrown('custom message %s')
+            ->ifNotThrown('custom message {expected}')
             ->__invoke()
         ;
     }
@@ -76,7 +76,7 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectExceptionMessage('custom message RuntimeException Exception');
 
         ThrowsAssertion::expect(\RuntimeException::class, function() { throw new \Exception(); })
-            ->ifMismatch('custom message %s %s')
+            ->ifMismatch('custom message {expected} {actual}')
             ->__invoke()
         ;
     }

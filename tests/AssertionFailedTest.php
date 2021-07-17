@@ -13,39 +13,58 @@ final class AssertionFailedTest extends TestCase
     /**
      * @test
      */
-    public function message_is_created_with_context(): void
+    public function message_is_created_with_context_as_list_array(): void
     {
         $exception = new AssertionFailed('message %s');
 
         $this->assertSame('message %s', $exception->getMessage());
-
-        $exception = new AssertionFailed('message %s %s %s %s %s', [1, 'string', 4.3, new \stdClass(), ['v']]);
-
-        $this->assertSame('message 1 string 4.3 stdClass (array)', $exception->getMessage());
-    }
-
-    /**
-     * @test
-     */
-    public function can_access_raw_context(): void
-    {
-        $exception = new AssertionFailed('message %s');
-
         $this->assertSame([], $exception->getContext());
 
-        $exception = new AssertionFailed('message %s %s %s %s %s', [
-            1, 'string', 4.3, $object = new \stdClass(), ['array'],
-        ]);
+        $exception = new AssertionFailed('message %s %s %s %s %s', [1, 'string', 4.3, $object = new \stdClass(), ['foo']]);
 
+        $this->assertSame('message 1 string 4.3 stdClass (array)', $exception->getMessage());
         $this->assertSame(
             [
                 1,
                 'string',
                 4.3,
                 $object,
-                ['array'],
+                ['foo'],
             ],
             $exception->getContext()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function message_is_created_with_context_as_assoc_array(): void
+    {
+        $object = new \stdClass();
+        $messageTemplate = 'message {int} {string} {float} {object} {array}';
+        $expectedMessage = 'message 1 value 4.3 stdClass (array)';
+        $expectedContext = [
+            'int' => 1,
+            'string' => 'value',
+            'float' => 4.3,
+            'object' => $object,
+            'array' => ['foo'],
+        ];
+
+        $exception = new AssertionFailed($messageTemplate, $expectedContext);
+
+        $this->assertSame($expectedMessage, $exception->getMessage());
+        $this->assertSame($expectedContext, $exception->getContext());
+
+        $exception = new AssertionFailed($messageTemplate, [
+            '{int}' => 1,
+            '{string}' => 'value',
+            'float' => 4.3,
+            '{object}' => $object,
+            '{array}' => ['foo'],
+        ]);
+
+        $this->assertSame($expectedMessage, $exception->getMessage());
+        $this->assertSame($expectedContext, $exception->getContext());
     }
 }

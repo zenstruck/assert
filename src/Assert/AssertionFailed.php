@@ -12,7 +12,7 @@ final class AssertionFailed extends \RuntimeException
 
     public function __construct(string $message, array $context = [], ?\Throwable $previous = null)
     {
-        $this->context = $context;
+        $this->context = self::denormalizeContext($context);
 
         parent::__construct(self::createMessage($message, $context), 0, $previous);
     }
@@ -51,6 +51,44 @@ final class AssertionFailed extends \RuntimeException
             $context
         );
 
-        return $context ? \sprintf($template, ...$context) : $template;
+        if (!$context) {
+            return $template;
+        }
+
+        if (array_is_list($context)) {
+            return \sprintf($template, ...$context);
+        }
+
+        return \strtr($template, self::normalizeContext($context));
+    }
+
+    private static function normalizeContext(array $context): array
+    {
+        $newContext = [];
+
+        foreach ($context as $key => $value) {
+            if (!\preg_match('#^{.+}$#', $key)) {
+                $key = "{{$key}}";
+            }
+
+            $newContext[$key] = $value;
+        }
+
+        return $newContext;
+    }
+
+    private static function denormalizeContext(array $context): array
+    {
+        $newContext = [];
+
+        foreach ($context as $key => $value) {
+            if (\preg_match('#^{(.+)}$#', $key, $matches)) {
+                $key = $matches[1];
+            }
+
+            $newContext[$key] = $value;
+        }
+
+        return $newContext;
     }
 }
