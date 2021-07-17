@@ -39,6 +39,18 @@ final class AssertionFailed extends \RuntimeException
 
     private static function createMessage(string $template, array $context): string
     {
+        // normalize context into scalar values
+        $context = \array_map(
+            static function($value) {
+                if (\is_object($value)) {
+                    return \get_class($value);
+                }
+
+                return \is_scalar($value) ? $value : \sprintf('(%s)', \gettype($value));
+            },
+            $context
+        );
+
         return $context ? \sprintf($template, ...$context) : $template;
     }
 }

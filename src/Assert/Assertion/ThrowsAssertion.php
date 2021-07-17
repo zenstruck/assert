@@ -45,7 +45,7 @@ final class ThrowsAssertion
             if (!$exception instanceof $this->expected) {
                 AssertionFailed::throw(
                     $this->mismatchMessage,
-                    $this->mismatchContext ?: [$this->expected, \get_class($exception)]
+                    $this->mismatchContext ?: [$this->expected, $exception]
                 );
             }
 
