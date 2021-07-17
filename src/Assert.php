@@ -14,6 +14,10 @@ final class Assert
     /** @var Handler|null */
     private static $handler;
 
+    private function __construct()
+    {
+    }
+
     /**
      * @param callable():void $assertion Considered a "pass" if invoked successfully
      *                                   Considered a "fail" if {@see \Zenstruck\Assert\AssertionFailed} is thrown
