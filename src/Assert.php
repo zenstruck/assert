@@ -20,7 +20,7 @@ final class Assert
 
     /**
      * @param callable():void $assertion Considered a "pass" if invoked successfully
-     *                                   Considered a "fail" if {@see \Zenstruck\Assert\AssertionFailed} is thrown
+     *                                   Considered a "fail" if {@see AssertionFailed} is thrown
      */
     public static function that(callable $assertion): void
     {
