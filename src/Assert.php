@@ -2,9 +2,11 @@
 
 namespace Zenstruck;
 
+use Zenstruck\Assert\Assertion\Negatable;
 use Zenstruck\Assert\Assertion\ThrowsAssertion;
 use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Handler;
+use Zenstruck\Assert\Not;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -31,6 +33,15 @@ final class Assert
         } catch (AssertionFailed $e) {
             self::handler()->onFailure($e);
         }
+    }
+
+    /**
+     * @param Negatable $assertion Considered a "pass" if {@see AssertionFailed} is thrown when invoked
+     *                             Considered a "fail" if {@see AssertionFailed} is NOT thrown when invoked
+     */
+    public static function not(Negatable $assertion): void
+    {
+        self::that(Not::wrap($assertion));
     }
 
     /**

@@ -7,7 +7,7 @@ use Zenstruck\Assert\AssertionFailed;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ThrowsAssertion
+final class ThrowsAssertion implements Negatable
 {
     /** @var string */
     private $expected;
@@ -75,5 +75,10 @@ final class ThrowsAssertion
         }
 
         return new self($exception, $during, $onCatch);
+    }
+
+    public function negatableFailure(): AssertionFailed
+    {
+        return new AssertionFailed('Expected "{expected}" to NOT be thrown but it was.', ['expected' => $this->expected]);
     }
 }

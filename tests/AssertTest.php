@@ -5,6 +5,7 @@ namespace Zenstruck\Assert\Tests;
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
 use Zenstruck\Assert\AssertionFailed;
+use Zenstruck\Assert\Tests\Fixture\NegatableAssertion;
 use Zenstruck\Assert\Tests\Fixture\TraceableHandler;
 
 /**
@@ -50,6 +51,50 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertCount(1, $this->handler->failures());
         $this->assertSame('message', $this->handler->lastFailure()->getMessage());
+    }
+
+    /**
+     * @test
+     */
+    public function not_success(): void
+    {
+        $assertion = new NegatableAssertion(true);
+
+        $this->assertSame(0, $this->handler->successCount());
+        $this->assertCount(0, $this->handler->failures());
+
+        Assert::that($assertion);
+
+        $this->assertSame(0, $this->handler->successCount());
+        $this->assertCount(1, $this->handler->failures());
+        $this->assertSame('assertion failed', $this->handler->lastFailure()->getMessage());
+
+        Assert::not($assertion);
+
+        $this->assertSame(1, $this->handler->successCount());
+        $this->assertCount(1, $this->handler->failures());
+    }
+
+    /**
+     * @test
+     */
+    public function not_failure(): void
+    {
+        $assertion = new NegatableAssertion(false);
+
+        $this->assertSame(0, $this->handler->successCount());
+        $this->assertCount(0, $this->handler->failures());
+
+        Assert::that($assertion);
+
+        $this->assertSame(1, $this->handler->successCount());
+        $this->assertCount(0, $this->handler->failures());
+
+        Assert::not($assertion);
+
+        $this->assertSame(1, $this->handler->successCount());
+        $this->assertCount(1, $this->handler->failures());
+        $this->assertSame('negation failed', $this->handler->lastFailure()->getMessage());
     }
 
     /**

@@ -4,6 +4,8 @@ namespace Zenstruck\Assert\Tests\Assertion;
 
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert\Assertion\ThrowsAssertion;
+use Zenstruck\Assert\AssertionFailed;
+use Zenstruck\Assert\Not;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -63,5 +65,20 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectExceptionMessage('Expected exception must be an object or interface, "string" given.');
 
         ThrowsAssertion::expect(function(string $param) {}, function() {});
+    }
+
+    /**
+     * @test
+     */
+    public function is_negatable(): void
+    {
+        $assertion = ThrowsAssertion::expect(\RuntimeException::class, function() { throw new \RuntimeException(); });
+
+        $assertion(); // passes
+
+        $this->expectException(AssertionFailed::class);
+        $this->expectExceptionMessage('Expected "RuntimeException" to NOT be thrown but it was.');
+
+        (Not::wrap($assertion))();
     }
 }
