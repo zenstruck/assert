@@ -32,7 +32,7 @@ final class AssertionFailed extends \RuntimeException
         throw new self($message, $context, $previous);
     }
 
-    public function getContext(): array
+    public function context(): array
     {
         return $this->context;
     }

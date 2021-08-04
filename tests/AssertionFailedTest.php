@@ -18,7 +18,7 @@ final class AssertionFailedTest extends TestCase
         $exception = new AssertionFailed('message %s');
 
         $this->assertSame('message %s', $exception->getMessage());
-        $this->assertSame([], $exception->getContext());
+        $this->assertSame([], $exception->context());
 
         $exception = new AssertionFailed('message %s %s %s %s %s', [1, 'string', 4.3, $object = new \stdClass(), ['foo']]);
 
@@ -31,7 +31,7 @@ final class AssertionFailedTest extends TestCase
                 $object,
                 ['foo'],
             ],
-            $exception->getContext()
+            $exception->context()
         );
     }
 
@@ -54,7 +54,7 @@ final class AssertionFailedTest extends TestCase
         $exception = new AssertionFailed($messageTemplate, $expectedContext);
 
         $this->assertSame($expectedMessage, $exception->getMessage());
-        $this->assertSame($expectedContext, $exception->getContext());
+        $this->assertSame($expectedContext, $exception->context());
 
         $exception = new AssertionFailed($messageTemplate, [
             '{int}' => 1,
@@ -65,6 +65,6 @@ final class AssertionFailedTest extends TestCase
         ]);
 
         $this->assertSame($expectedMessage, $exception->getMessage());
-        $this->assertSame($expectedContext, $exception->getContext());
+        $this->assertSame($expectedContext, $exception->context());
     }
 }
