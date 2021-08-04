@@ -31,4 +31,37 @@ final class ThrowsAssertionTest extends TestCase
 
         ThrowsAssertion::expect(function($exception) {}, function() {});
     }
+
+    /**
+     * @test
+     */
+    public function expected_exception_must_be_object_or_interface(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected exception must be an object or interface, "array" given.');
+
+        ThrowsAssertion::expect('array', function() {});
+    }
+
+    /**
+     * @test
+     */
+    public function expected_exception_must_be_a_string(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected exception must a string representation of a class or interface, "array" given.');
+
+        ThrowsAssertion::expect([], function() {});
+    }
+
+    /**
+     * @test
+     */
+    public function expected_callable_parameter_must_be_object_or_interface(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected exception must be an object or interface, "string" given.');
+
+        ThrowsAssertion::expect(function(string $param) {}, function() {});
+    }
 }

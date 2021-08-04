@@ -66,6 +66,14 @@ final class ThrowsAssertion
             $exception = $type->getName();
         }
 
+        if (!\is_string($exception)) {
+            throw new \InvalidArgumentException(\sprintf('Expected exception must a string representation of a class or interface, "%s" given.', get_debug_type($exception)));
+        }
+
+        if (!\class_exists($exception) && !\interface_exists($exception)) {
+            throw new \InvalidArgumentException(\sprintf('Expected exception must be an object or interface, "%s" given.', $exception));
+        }
+
         return new self($exception, $during, $onCatch);
     }
 }
