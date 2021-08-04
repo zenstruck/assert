@@ -15,26 +15,14 @@ final class ThrowsAssertion
     /** @var callable */
     private $during;
 
-    /** @var callable[] */
+    /** @var callable */
     private $onCatch;
-
-    /** @var string */
-    private $notThrownMessage = 'No exception thrown. Expected "{expected}".';
-
-    /** @var string[] */
-    private $notThrownContext = [];
-
-    /** @var string */
-    private $mismatchMessage = 'Expected "{expected}" to be thrown but got "{actual}".';
-
-    /** @var string[] */
-    private $mismatchContext = [];
 
     private function __construct(string $expected, callable $during, callable $onCatch)
     {
         $this->expected = $expected;
         $this->during = $during;
-        $this->onCatch = [$onCatch];
+        $this->onCatch = $onCatch;
     }
 
     public function __invoke(): void
@@ -43,17 +31,15 @@ final class ThrowsAssertion
             ($this->during)();
         } catch (\Throwable $actual) {
             if (!$actual instanceof $this->expected) {
-                AssertionFailed::throw($this->mismatchMessage, $this->mismatchContext($actual));
+                AssertionFailed::throw('Expected "{expected}" to be thrown but got "{actual}".', ['expected' => $this->expected, 'actual' => $actual]);
             }
 
-            foreach ($this->onCatch as $callback) {
-                $callback($actual);
-            }
+            ($this->onCatch)($actual);
 
             return;
         }
 
-        AssertionFailed::throw($this->notThrownMessage, $this->notThrownContext());
+        AssertionFailed::throw('No exception thrown. Expected "{expected}".', ['expected' => $this->expected]);
     }
 
     /**
@@ -61,7 +47,7 @@ final class ThrowsAssertion
      *                                                    callable: uses the first argument's type-hint
      *                                                    to determine the expected exception class. When
      *                                                    exception is caught, callable is invoked with
-     *                                                    the caught exception {@see onCatch()}
+     *                                                    the caught exception
      * @param callable                         $during    Considered a "fail" if when invoked,
      *                                                    $exception isn't thrown
      */
@@ -81,53 +67,5 @@ final class ThrowsAssertion
         }
 
         return new self($exception, $during, $onCatch);
-    }
-
-    /**
-     * Invoked after the expected exception was successfully caught
-     * with the exception as an argument. Can be used to perform
-     * additional assertions on the exception itself or side-effect
-     * assertions.
-     *
-     * @param callable(\Throwable):void $callback
-     */
-    public function onCatch(callable $callback): self
-    {
-        $this->onCatch[] = $callback;
-
-        return $this;
-    }
-
-    /**
-     * Customize the failure message if no exception was thrown.
-     */
-    public function ifNotThrown(string $message, array $context = []): self
-    {
-        $this->notThrownMessage = $message;
-        $this->notThrownContext = $context;
-
-        return $this;
-    }
-
-    /**
-     * Customize the failure message the exception thrown does not match
-     * (or is not an instance of) the expected exception class.
-     */
-    public function ifMismatch(string $message, array $context = []): self
-    {
-        $this->mismatchMessage = $message;
-        $this->mismatchContext = $context;
-
-        return $this;
-    }
-
-    private function notThrownContext(): array
-    {
-        return $this->notThrownContext ?: ['expected' => $this->expected];
-    }
-
-    private function mismatchContext(\Throwable $actual): array
-    {
-        return $this->mismatchContext ?: ['expected' => $this->expected, 'actual' => $actual];
     }
 }
