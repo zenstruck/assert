@@ -114,11 +114,16 @@ Assert::throws(\RuntimeException::class, fn() => $code->thatThrowsException());
 // fails if exception is thrown but not instance of CustomException
 Assert::throws(
     function(CustomException $e) use ($database) {
-        // can use standard PHPUnit assertions here on the exception itself
+        // make assertions on the exception
+        Assert::true(str_contains($e->getMessage(), 'some message'), 'Not the expected exception message');
+        Assert::true('value' === $e->getSomeValue(), 'Exception does not have the expected value')
+
+        // make side effect assertions
+        Assert::true($database->userTableEmpty(), 'The user table is not empty');
+
+        // If using within the context of a PHPUnit test, you can use standard PHPUnit assertions
         $this->assertStringContainsString('some message', $e->getMessage());
         $this->assertSame('value', $e->getSomeValue());
-
-        // can use standard PHPUnit assertions to test side-effects
         $this->assertTrue($database->userTableEmpty());
     },
     fn() => $code->thatThrowsException()
