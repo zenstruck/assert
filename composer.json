@@ -1,6 +1,6 @@
 {
     "name": "zenstruck/assert",
-    "description": "Standalone, lightweight, test framework agnostic *test assertion* library.",
+    "description": "Standalone, lightweight, framework agnostic, test assertion library.",
     "homepage": "https://github.com/zenstruck/assert",
     "type": "library",
     "license": "MIT",

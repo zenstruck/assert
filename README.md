@@ -12,7 +12,7 @@ opposed to what these libraries provide: _type safety assertions_.
 
 With the exception of [Throws Assertion](#throws-assertion) (which provides a nice API
 for making exception assertions), this library is really only useful for 3rd party libraries that
-would like to provide test assertions but not rely on a specific test library.
+would like to provide test assertions but not have a direct dependency on a specific test library.
 
 ## Installation
 
@@ -23,7 +23,7 @@ $ composer require zenstruck/assert
 ## `Zenstruck\Assert`
 
 This is the main entry point for making assertions. When the methods on this class
-are called, they throw a `Zenstruck\Assert\AssertionFailed` on failure. If the
+are called, they throw a `Zenstruck\Assert\AssertionFailed` on failure. If they
 do not throw this exception, they are considered successful.
 
 When using a PHPUnit-based framework, failed assertions are auto-converted to PHPUnit
@@ -49,7 +49,6 @@ Assert::false(true === true, 'The condition was not false.');
 ```
 
 ## Generic Fail/Pass
-
 
 ```php
 use Zenstruck\Assert;
@@ -130,7 +129,7 @@ message to the user. The `AssertionFailed` exception has some features to help.
 ```php
 use Zenstruck\Assert\AssertionFailed;
 
-// The `throw()` named constructor creates the exception and immediately throws it.
+// The `throw()` named constructor creates the exception and immediately throws it
 AssertionFailed::throw('Some message');
 
 // second parameter can be used as sprintf values for the message
@@ -148,7 +147,7 @@ AssertionFailed::throw('Expected "{expected}" but got "{actual}"', [
 
 ## Assertion Objects
 
-Since `Zenstruck\Assert::that()` accepts any `callable` complex assertions can be wrapped
+Since `Zenstruck\Assert::that()` accepts any `callable`, complex assertions can be wrapped
 up into `invokable` objects:
 
 ```php
