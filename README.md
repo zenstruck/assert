@@ -1,5 +1,9 @@
 # zenstruck/assert
 
+[![CI Status](https://github.com/zenstruck/assert/workflows/CI/badge.svg)](https://github.com/zenstruck/assert/actions?query=workflow%3ACI)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zenstruck/assert/badges/quality-score.png?b=1.x)](https://scrutinizer-ci.com/g/zenstruck/assert/?branch=1.x)
+[![Code Coverage](https://codecov.io/gh/zenstruck/assert/branch/1.x/graph/badge.svg?token=R7OHYYGPKM)](https://codecov.io/gh/zenstruck/assert)
+
 This library allows dependency-free test assertions. When using a PHPUnit-based test
 library (PHPUnit itself, pest, Codeception), failed assertions are automatically converted
 to PHPUnit failures and successful assertions are added to PHPUnit's successful assertion
