@@ -184,6 +184,20 @@ final class AssertTest extends TestCase
     /**
      * @test
      */
+    public function generic_pass(): void
+    {
+        $this->assertSame(0, $this->handler->successCount());
+        $this->assertCount(0, $this->handler->failures());
+
+        Assert::pass();
+
+        $this->assertSame(1, $this->handler->successCount());
+        $this->assertCount(0, $this->handler->failures());
+    }
+
+    /**
+     * @test
+     */
     public function throws_success_for_class_name(): void
     {
         $this->assertSame(0, $this->handler->successCount());

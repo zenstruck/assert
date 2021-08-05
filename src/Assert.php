@@ -73,6 +73,14 @@ final class Assert
     }
 
     /**
+     * Trigger a generic assertion "pass".
+     */
+    public static function pass(): void
+    {
+        self::handler()->onSuccess();
+    }
+
+    /**
      * @see ThrowsAssertion::expect()
      */
     public static function throws($exception, callable $during): void
