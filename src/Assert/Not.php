@@ -28,7 +28,7 @@ final class Not
             return;
         }
 
-        throw $this->assertion->negatableFailure();
+        throw $this->assertion->notFailure();
     }
 
     public static function wrap(Negatable $assertion): self

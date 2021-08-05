@@ -24,7 +24,7 @@ final class NegatableAssertion implements Negatable
         }
     }
 
-    public function negatableFailure(): AssertionFailed
+    public function notFailure(): AssertionFailed
     {
         return new AssertionFailed('negation failed');
     }

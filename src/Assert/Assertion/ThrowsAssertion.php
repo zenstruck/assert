@@ -77,7 +77,7 @@ final class ThrowsAssertion implements Negatable
         return new self($exception, $during, $onCatch);
     }
 
-    public function negatableFailure(): AssertionFailed
+    public function notFailure(): AssertionFailed
     {
         return new AssertionFailed('Expected "{expected}" to NOT be thrown but it was.', ['expected' => $this->expected]);
     }

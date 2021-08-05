@@ -205,7 +205,7 @@ class StringContains implements Negatable
         }
     }
     
-    public function negatableFailure(): AssertionFailed
+    public function notFailure(): AssertionFailed
     {
         return new AssertionFailed(
             'Expected string "{haystack}" to not contain "{needle}" but it did.',

@@ -15,5 +15,5 @@ interface Negatable
     /**
      * The failure to use if assertion passed but negated {@see Not}.
      */
-    public function negatableFailure(): AssertionFailed;
+    public function notFailure(): AssertionFailed;
 }
