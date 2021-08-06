@@ -141,18 +141,23 @@ use Zenstruck\Assert\AssertionFailed;
 // The `throw()` named constructor creates the exception and immediately throws it
 AssertionFailed::throw('Some message');
 
-// second parameter can be used as sprintf values for the message
-// message = 'Expected "value 1" but got "value 2"'
-AssertionFailed::throw('Expected "%s" but got "%s"', ['value 1', 'value 2']);
+// a second "context" parameter can be used as sprintf values for the message
+AssertionFailed::throw('Expected "%s" but got "%s"', ['value 1', 'value 2']); // Expected "value 1" but got "value 2"
 
-// when an associated array passed as the second parameter, the message is constructed
+// when an associated array passed as the context parameter, the message is constructed
 // with a simple template system
-// message = 'Expected "value 1" but got "value 2"'
-AssertionFailed::throw('Expected "{expected}" but got "{actual}"', [
+AssertionFailed::throw('Expected "{expected}" but got "{actual}"', [ // Expected "value 1" but got "value 2"
     'expected' => 'value 1',
     'actual' => 'value 2',
 ]);
 ```
+
+**NOTES:**
+1. When the message is constructed with context, non-scalar values are run through
+`get_debug_type()` and strings longer than _40_ characters are trimmed. The full context
+is available via `AssertionFailed::context()`.
+2. When using with PHPUnit, the full context is exported with the failure message if in
+_verbose-mode_ (`--verbose|-v`).
 
 ## Assertion Objects
 
