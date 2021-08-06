@@ -40,16 +40,7 @@ final class AssertionFailed extends \RuntimeException
     private static function createMessage(string $template, array $context): string
     {
         // normalize context into scalar values
-        $context = \array_map(
-            static function($value) {
-                if (\is_object($value)) {
-                    return \get_class($value);
-                }
-
-                return \is_scalar($value) ? $value : \sprintf('(%s)', \gettype($value));
-            },
-            $context
-        );
+        $context = \array_map([self::class, 'normalizeContextValue'], $context);
 
         if (!$context) {
             return $template;
@@ -60,6 +51,25 @@ final class AssertionFailed extends \RuntimeException
         }
 
         return \strtr($template, self::normalizeContext($context));
+    }
+
+    private static function normalizeContextValue($value): string
+    {
+        if (\is_object($value)) {
+            return \get_class($value);
+        }
+
+        if (!\is_scalar($value)) {
+            return \sprintf('(%s)', get_debug_type($value));
+        }
+
+        $value = \preg_replace('/\s+/', ' ', $value);
+
+        if (\mb_strlen($value) <= 40) {
+            return $value;
+        }
+
+        return \sprintf('%s...%s', \mb_substr($value, 0, 27), \mb_substr($value, -10));
     }
 
     private static function normalizeContext(array $context): array
