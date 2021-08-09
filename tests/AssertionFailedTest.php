@@ -21,7 +21,7 @@ final class AssertionFailedTest extends TestCase
         $this->assertSame([], $exception->context());
 
         $exception = new AssertionFailed(
-            'message %s %s %s %s %s %s %s %s',
+            'message %s %s %s %s %s %s %s %s %s %s',
             $expected = [
                 1,
                 'string',
@@ -31,10 +31,12 @@ final class AssertionFailedTest extends TestCase
                 ['an', 'array'],
                 'The quick brown fox jumps over the lazy dog',
                 "string\nwith\n\rline\nbreak",
+                false,
+                true,
             ]
         );
 
-        $this->assertSame('message 1 string 4.3 stdClass (null) (array) The quick brown fox jumps o...e lazy dog string with line break', $exception->getMessage());
+        $this->assertSame('message 1 string 4.3 stdClass (null) (array) The quick brown fox jumps o...e lazy dog string with line break (false) (true)', $exception->getMessage());
         $this->assertSame($expected, $exception->context());
     }
 
@@ -44,8 +46,8 @@ final class AssertionFailedTest extends TestCase
     public function message_is_created_with_context_as_assoc_array(): void
     {
         $object = new \stdClass();
-        $messageTemplate = 'message {int} {string1} {float} {object} {array} {string2} {string3}';
-        $expectedMessage = 'message 1 value 4.3 stdClass (array) The quick brown fox jumps o...e lazy dog string with line break';
+        $messageTemplate = 'message {int} {string1} {float} {object} {array} {string2} {string3} {false} {true}';
+        $expectedMessage = 'message 1 value 4.3 stdClass (array) The quick brown fox jumps o...e lazy dog string with line break (false) (true)';
         $expectedContext = [
             'int' => 1,
             'string1' => 'value',
@@ -54,6 +56,8 @@ final class AssertionFailedTest extends TestCase
             'array' => ['foo'],
             'string2' => 'The quick brown fox jumps over the lazy dog',
             'string3' => "string\nwith\n\rline\nbreak",
+            'false' => false,
+            'true' => true,
         ];
 
         $exception = new AssertionFailed($messageTemplate, $expectedContext);
@@ -69,6 +73,8 @@ final class AssertionFailedTest extends TestCase
             '{array}' => ['foo'],
             '{string2}' => 'The quick brown fox jumps over the lazy dog',
             '{string3}' => "string\nwith\n\rline\nbreak",
+            '{false}' => false,
+            '{true}' => true,
         ]);
 
         $this->assertSame($expectedMessage, $exception->getMessage());

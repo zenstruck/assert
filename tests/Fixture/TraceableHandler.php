@@ -21,6 +21,11 @@ final class TraceableHandler implements Handler
         return $this->successes;
     }
 
+    public function failureCount(): int
+    {
+        return \count($this->failures);
+    }
+
     /**
      * @return AssertionFailed[]
      */
@@ -36,6 +41,11 @@ final class TraceableHandler implements Handler
         }
 
         return $last;
+    }
+
+    public function lastFailureMessage(): string
+    {
+        return $this->lastFailure()->getMessage();
     }
 
     public function onSuccess(): void
