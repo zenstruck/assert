@@ -7,21 +7,57 @@ use Zenstruck\Assert\AssertionFailed;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ThrowsAssertion implements Negatable
+final class ThrowsAssertion
 {
-    /** @var string */
-    private $expected;
-
     /** @var callable */
     private $during;
+
+    /** @var string */
+    private $expectedException;
+
+    /** @var string|null */
+    private $expectedMessage;
 
     /** @var callable */
     private $onCatch;
 
-    private function __construct(string $expected, callable $during, callable $onCatch)
+    /**
+     * @param callable                         $during            Considered a "fail" if, when invoked,
+     *                                                            $expectedException isn't thrown
+     * @param string|callable(\Throwable):void $expectedException string: class name of the expected exception
+     *                                                            callable: uses the first argument's type-hint
+     *                                                            to determine the expected exception class. When
+     *                                                            exception is caught, callable is invoked with
+     *                                                            the caught exception
+     * @param string|null                      $expectedMessage   Assert the caught exception message "contains"
+     *                                                            this string
+     */
+    public function __construct(callable $during, $expectedException, ?string $expectedMessage = null)
     {
-        $this->expected = $expected;
+        $onCatch = static function() {};
+
+        if (\is_callable($expectedException)) {
+            $parameterRef = (new \ReflectionFunction(\Closure::fromCallable($expectedException)))->getParameters()[0] ?? null;
+
+            if (!$parameterRef || !($type = $parameterRef->getType()) instanceof \ReflectionNamedType) {
+                throw new \InvalidArgumentException('When $exception is a callback, the first parameter must be type-hinted as the expected exception.');
+            }
+
+            $onCatch = $expectedException;
+            $expectedException = $type->getName();
+        }
+
+        if (!\is_string($expectedException)) {
+            throw new \InvalidArgumentException(\sprintf('Expected exception must a string representation of a class or interface, "%s" given.', get_debug_type($expectedException)));
+        }
+
+        if (!\class_exists($expectedException) && !\interface_exists($expectedException)) {
+            throw new \InvalidArgumentException(\sprintf('Expected exception must be an object or interface, "%s" given.', $expectedException));
+        }
+
         $this->during = $during;
+        $this->expectedException = $expectedException;
+        $this->expectedMessage = $expectedMessage;
         $this->onCatch = $onCatch;
     }
 
@@ -30,8 +66,22 @@ final class ThrowsAssertion implements Negatable
         try {
             ($this->during)();
         } catch (\Throwable $actual) {
-            if (!$actual instanceof $this->expected) {
-                AssertionFailed::throw('Expected "{expected}" to be thrown but got "{actual}".', ['expected' => $this->expected, 'actual' => $actual]);
+            if (!$actual instanceof $this->expectedException) {
+                AssertionFailed::throw(
+                    'Expected "{expected_exception}" to be thrown but got "{actual_exception}".',
+                    ['expected_exception' => $this->expectedException, 'actual_exception' => $actual]
+                );
+            }
+
+            if ($this->expectedMessage && !str_contains($actual->getMessage(), $this->expectedMessage)) {
+                AssertionFailed::throw(
+                    'Expected "{actual_exception}" message "{actual_message}" to contain "{expected_message}".',
+                    [
+                        'actual_exception' => $this->expectedException,
+                        'actual_message' => $actual->getMessage(),
+                        'expected_message' => $this->expectedMessage,
+                    ]
+                );
             }
 
             ($this->onCatch)($actual);
@@ -39,46 +89,9 @@ final class ThrowsAssertion implements Negatable
             return;
         }
 
-        AssertionFailed::throw('No exception thrown. Expected "{expected}".', ['expected' => $this->expected]);
-    }
-
-    /**
-     * @param string|callable(\Throwable):void $exception string: class name of the expected exception
-     *                                                    callable: uses the first argument's type-hint
-     *                                                    to determine the expected exception class. When
-     *                                                    exception is caught, callable is invoked with
-     *                                                    the caught exception
-     * @param callable                         $during    Considered a "fail" if when invoked,
-     *                                                    $exception isn't thrown
-     */
-    public static function expect($exception, callable $during): self
-    {
-        $onCatch = static function() {};
-
-        if (\is_callable($exception)) {
-            $parameterRef = (new \ReflectionFunction(\Closure::fromCallable($exception)))->getParameters()[0] ?? null;
-
-            if (!$parameterRef || !($type = $parameterRef->getType()) instanceof \ReflectionNamedType) {
-                throw new \InvalidArgumentException('When $exception is a callback, the first parameter must be type-hinted as the expected exception.');
-            }
-
-            $onCatch = $exception;
-            $exception = $type->getName();
-        }
-
-        if (!\is_string($exception)) {
-            throw new \InvalidArgumentException(\sprintf('Expected exception must a string representation of a class or interface, "%s" given.', get_debug_type($exception)));
-        }
-
-        if (!\class_exists($exception) && !\interface_exists($exception)) {
-            throw new \InvalidArgumentException(\sprintf('Expected exception must be an object or interface, "%s" given.', $exception));
-        }
-
-        return new self($exception, $during, $onCatch);
-    }
-
-    public function notFailure(): AssertionFailed
-    {
-        return new AssertionFailed('Expected "{expected}" to NOT be thrown but it was.', ['expected' => $this->expected]);
+        AssertionFailed::throw(
+            'No exception thrown. Expected "{expected_exception}".',
+            ['expected_exception' => $this->expectedException]
+        );
     }
 }

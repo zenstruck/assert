@@ -57,4 +57,10 @@ final class TraceableHandler implements Handler
     {
         $this->failures[] = $exception;
     }
+
+    public function reset(): void
+    {
+        $this->failures = [];
+        $this->successes = 0;
+    }
 }

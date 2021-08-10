@@ -17,13 +17,13 @@ final class AssertTest extends TestCase
     /**
      * @test
      */
-    public function that_success(): void
+    public function run_success(): void
     {
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that(function() {});
-        Assert::that(function() { return 'value'; });
+        Assert::run(function() {});
+        Assert::run(function() { return 'value'; });
 
         $this->assertSame(2, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
@@ -32,12 +32,12 @@ final class AssertTest extends TestCase
     /**
      * @test
      */
-    public function that_failure(): void
+    public function run_failure(): void
     {
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that(function() { AssertionFailed::throw('message'); });
+        Assert::run(function() { AssertionFailed::throw('message'); });
 
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(1, $this->handler->failureCount());
@@ -54,7 +54,7 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that($assertion);
+        Assert::run($assertion);
 
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(1, $this->handler->failureCount());
@@ -76,7 +76,7 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that($assertion);
+        Assert::run($assertion);
 
         $this->assertSame(1, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
@@ -184,106 +184,5 @@ final class AssertTest extends TestCase
 
         $this->assertSame(1, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_success_for_class_name(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertSame(0, $this->handler->failureCount());
-
-        Assert::throws(\RuntimeException::class, function() { throw new \RuntimeException(); });
-        Assert::throws(\Throwable::class, function() { throw new \RuntimeException(); });
-
-        $this->assertSame(2, $this->handler->successCount());
-        $this->assertSame(0, $this->handler->failureCount());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_success_for_callable(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertSame(0, $this->handler->failureCount());
-
-        Assert::throws(function(\RuntimeException $e) {}, function() { throw new \RuntimeException(); });
-
-        $expectedException = new \RuntimeException();
-        $actualException = null;
-
-        Assert::throws(
-            function(\Throwable $e) use (&$actualException) {
-                $actualException = $e;
-            },
-            function() use ($expectedException) {
-                throw $expectedException;
-            }
-        );
-
-        $this->assertSame($expectedException, $actualException);
-
-        $this->assertSame(2, $this->handler->successCount());
-        $this->assertSame(0, $this->handler->failureCount());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_failure_if_no_throw(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertSame(0, $this->handler->failureCount());
-
-        Assert::throws(\RuntimeException::class, function() {});
-
-        $this->assertSame('No exception thrown. Expected "RuntimeException".', $this->handler->lastFailureMessage());
-
-        $actualException = null;
-
-        Assert::throws(
-            function(\Throwable $e) use (&$actualException) {
-                $actualException = $e;
-            },
-            function() {}
-        );
-
-        $this->assertSame('No exception thrown. Expected "Throwable".', $this->handler->lastFailureMessage());
-        $this->assertNull($actualException);
-
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertSame(2, $this->handler->failureCount());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_failure_if_mismatch(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertSame(0, $this->handler->failureCount());
-
-        Assert::throws(\RuntimeException::class, function() { throw new \Exception(); });
-
-        $this->assertSame('Expected "RuntimeException" to be thrown but got "Exception".', $this->handler->lastFailureMessage());
-
-        $actualException = null;
-
-        Assert::throws(
-            function(\InvalidArgumentException $e) use (&$actualException) {
-                $actualException = $e;
-            },
-            function() {
-                throw new \RuntimeException();
-            }
-        );
-
-        $this->assertSame('Expected "InvalidArgumentException" to be thrown but got "RuntimeException".', $this->handler->lastFailureMessage());
-        $this->assertNull($actualException);
-
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertSame(2, $this->handler->failureCount());
     }
 }

@@ -5,18 +5,19 @@
 [![Code Coverage](https://codecov.io/gh/zenstruck/assert/branch/1.x/graph/badge.svg?token=R7OHYYGPKM)](https://codecov.io/gh/zenstruck/assert)
 
 This library allows dependency-free test assertions. When using a PHPUnit-based test
-library (PHPUnit itself, pest, Codeception), failed assertions are automatically converted
+library (PHPUnit itself, Pest, Codeception), failed assertions are automatically converted
 to PHPUnit failures and successful assertions are added to PHPUnit's successful assertion
 count.
 
 This library differs from other popular assertion libraries
 ([webmozart/assert](https://github.com/webmozarts/assert) &
-[beberlei/assert](https://github.com/beberlei/assert)) in that it is purely for _test assertions_
-opposed to what these libraries provide: _type safety assertions_.
+[beberlei/assert](https://github.com/beberlei/assert)) in that it is purely for _test
+assertions_ opposed to what these libraries provide: _type safety assertions_.
 
-With the exception of [Throws Assertion](#throws-assertion) (which provides a nice API
-for making exception assertions), this library is really only useful for 3rd party libraries that
-would like to provide test assertions but not have a direct dependency on a specific test library.
+With the exception of the [Expectation API](#expectation-api) (specifically, the
+[Throws Expectation](#throws-expectation) which provides a nice API for making exception
+assertions), this library is really only useful for 3rd party libraries that would like
+to provide test assertions but not have a direct dependency on a specific test library.
 
 ## Installation
 
@@ -64,9 +65,9 @@ Assert::fail('This is a failure.');
 Assert::pass();
 ```
 
-## _That_ Assertions
+## _Run_ Assertions
 
-`Assert::that()` executes a `callable`. A successful execution is considered
+`Assert::run()` executes a `callable`. A successful execution is considered
 a pass and if `Zenstruck\Assert\AssertionFailed` is thrown, it is a fail.
 
 ```php
@@ -74,23 +75,98 @@ use Zenstruck\Assert;
 use Zenstruck\Assert\AssertionFailed;
 
 // failure
-Assert::that(function(): void {
+Assert::run(function(): void {
     if (true) {
         AssertionFailed::throw('This failed.');
     }
 });
 
 // pass
-Assert::that(function(): void {
+Assert::run(function(): void {
     if (false) {
         AssertionFailed::throw('This failed.');
     }
 });
 ```
 
-## Throws Assertion
+## Expectation API
 
-This assertion provides a nice API for exceptions. It is an alternative to PHPUnit's
+While the above assertions can be used to create *any* assertion, a simple, fluent,
+readable, expectation API is provided. This API is heavily inspired by
+[Pest PHP](https://pestphp.com/).
+
+```php
+use Zenstruck\Assert;
+
+// empty
+Assert::that([])->isEmpty(); // pass
+Assert::that(['foo'])->isEmpty(); // fail
+
+Assert::that(null)->isNotEmpty(); // fail
+Assert::that('value')->isNotEmpty(); // pass
+
+// count
+Assert::that([1, 2])->hasCount(2); // pass
+Assert::that(new \ArrayIterator([1, 2, 3]))->hasCount(2); // fail
+
+Assert::that(new \ArrayIterator([1, 2]))->doesNotHaveCount(5); // pass
+Assert::that($countableObjectWithCountOf5)->doesNotHaveCount(5); // fail
+
+// contains
+Assert::that('foobar')->contains('foo'); // pass
+Assert::that(['foo', 'bar'])->contains('foo'); // pass
+Assert::that('foobar')->contains('baz'); // fail
+Assert::that(['foo', 'bar'])->contains(6); // fail
+
+Assert::that('foobar')->doesNotContain('baz'); // pass
+Assert::that(new \ArrayIterator(['bar']))->doesNotContain('foo'); // pass
+Assert::that('foobar')->doesNotContain('bar'); // fail
+Assert::that(['foo', 'bar'])->doesNotContain('bar'); // fail
+
+// equals (== comparison) 
+Assert::that('foo')->equals('foo'); // pass
+Assert::that('6')->equals(6); // pass
+Assert::that('foo')->equals('bar'); // fail
+Assert::that(6)->equals(7); // fail
+
+Assert::that('foo')->isNotEqualTo('bar'); // pass
+Assert::that(6)->isNotEqualTo('6'); // fail
+
+// is (=== comparison)
+Assert::that('foo')->is('foo'); // pass
+Assert::that(6)->is(6); // pass
+Assert::that('foo')->is('bar'); // fail
+Assert::that(6)->is('6'); // fail
+
+Assert::that('foo')->isNot('foo'); // fail
+Assert::that(6)->isNot(6); // fail
+Assert::that('foo')->isNot('bar'); // pass
+Assert::that(6)->isNot('6'); // pass
+
+// greater than
+Assert::that(2)->isGreaterThan(1); // pass
+Assert::that(2)->isGreaterThan(1); // fail
+Assert::that(2)->isGreaterThan(2); // fail
+
+// greater than or equal to
+Assert::that(2)->isGreaterThanOrEqualTo(1); // pass
+Assert::that(2)->isGreaterThanOrEqualTo(1); // fail
+Assert::that(2)->isGreaterThanOrEqualTo(2); // pass
+
+// less than
+Assert::that(3)->isLessThan(4); // pass
+Assert::that(3)->isLessThan(2); // fail
+Assert::that(3)->isLessThan(3); // fail
+
+// less than or equal to
+Assert::that(3)->isLessThanOrEqualTo(4); // pass
+Assert::that(3)->isLessThanOrEqualTo(2); // fail
+Assert::that(3)->isLessThanOrEqualTo(3); // pass
+```
+
+### Throws Expectation
+
+This expectation provides a nice API for exceptions. It is an alternative to PHPUnit's
 `expectException()` which has the following limitations:
 
 1. Can only assert 1 exception is thrown per test.
@@ -104,7 +180,12 @@ use Zenstruck\Assert;
 
 // fails if exception not thrown
 // fails if exception is thrown but not instance of \RuntimeException
-Assert::throws(\RuntimeException::class, fn() => $code->thatThrowsException());
+Assert::that(fn() => $code->thatThrowsException())->throws(\RuntimeException::class);
+
+// fails if exception not thrown
+// fails if exception is thrown but not instance of \RuntimeException
+// fails if exception is thrown but exception message doesn't contain "some message"
+Assert::that(fn() => $code->thatThrowsException())->throws(\RuntimeException::class, 'some message');
 
 // a callable can be used for the expected exception. The first parameter's type
 // hint is used as the expected exception and the callable is executed with the
@@ -112,11 +193,11 @@ Assert::throws(\RuntimeException::class, fn() => $code->thatThrowsException());
 //
 // fails if exception not thrown
 // fails if exception is thrown but not instance of CustomException
-Assert::throws(
+Assert::that(fn() => $code->thatThrowsException())->throws(
     function(CustomException $e) use ($database) {
         // make assertions on the exception
-        Assert::true(str_contains($e->getMessage(), 'some message'), 'Not the expected exception message');
-        Assert::true('value' === $e->getSomeValue(), 'Exception does not have the expected value')
+        Assert::that($e->getMessage())->contains('some message');
+        Assert::that($e->getSomeValue())->is('value');
 
         // make side effect assertions
         Assert::true($database->userTableEmpty(), 'The user table is not empty');
@@ -125,14 +206,13 @@ Assert::throws(
         $this->assertStringContainsString('some message', $e->getMessage());
         $this->assertSame('value', $e->getSomeValue());
         $this->assertTrue($database->userTableEmpty());
-    },
-    fn() => $code->thatThrowsException()
+    }
 );
 ```
 
 ## `AssertionFailed` Exception
 
-When triggering a failed assertions, it is important to provide a useful failure
+When triggering a failed assertion, it is important to provide a useful failure
 message to the user. The `AssertionFailed` exception has some features to help.
 
 ```php
@@ -161,7 +241,7 @@ _verbose-mode_ (`--verbose|-v`).
 
 ## Assertion Objects
 
-Since `Zenstruck\Assert::that()` accepts any `callable`, complex assertions can be wrapped
+Since `Zenstruck\Assert::run()` accepts any `callable`, complex assertions can be wrapped
 up into `invokable` objects:
 
 ```php
@@ -186,10 +266,10 @@ class StringContains
 // use the above assertion:
 
 // passes
-Assert::that(new StringContains('quick brown fox', 'fox'));
+Assert::run(new StringContains('quick brown fox', 'fox'));
 
 // fails
-Assert::that(new StringContains('quick brown fox', 'dog'));
+Assert::run(new StringContains('quick brown fox', 'dog'));
 ```
 
 ## Negatable Assertion Objects
