@@ -63,6 +63,10 @@ final class AssertionFailed extends \RuntimeException
             return \sprintf('(%s)', get_debug_type($value));
         }
 
+        if (\is_bool($value)) {
+            return \sprintf('(%s)', \var_export($value, true));
+        }
+
         $value = \preg_replace('/\s+/', ' ', $value);
 
         if (\mb_strlen($value) <= 40) {

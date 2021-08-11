@@ -6,51 +6,42 @@ use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
 use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Tests\Fixture\NegatableAssertion;
-use Zenstruck\Assert\Tests\Fixture\TraceableHandler;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 final class AssertTest extends TestCase
 {
-    use ResetHandler;
-
-    /** @var TraceableHandler */
-    private $handler;
-
-    protected function setUp(): void
-    {
-        Assert::useHandler($this->handler = new TraceableHandler());
-    }
+    use HasTraceableHandler;
 
     /**
      * @test
      */
-    public function that_success(): void
+    public function run_success(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that(function() {});
-        Assert::that(function() { return 'value'; });
+        Assert::run(function() {});
+        Assert::run(function() { return 'value'; });
 
         $this->assertSame(2, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
     }
 
     /**
      * @test
      */
-    public function that_failure(): void
+    public function run_failure(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that(function() { AssertionFailed::throw('message'); });
+        Assert::run(function() { AssertionFailed::throw('message'); });
 
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(1, $this->handler->failures());
-        $this->assertSame('message', $this->handler->lastFailure()->getMessage());
+        $this->assertSame(1, $this->handler->failureCount());
+        $this->assertSame('message', $this->handler->lastFailureMessage());
     }
 
     /**
@@ -61,18 +52,18 @@ final class AssertTest extends TestCase
         $assertion = new NegatableAssertion(true);
 
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that($assertion);
+        Assert::run($assertion);
 
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(1, $this->handler->failures());
-        $this->assertSame('assertion failed', $this->handler->lastFailure()->getMessage());
+        $this->assertSame(1, $this->handler->failureCount());
+        $this->assertSame('assertion failed', $this->handler->lastFailureMessage());
 
         Assert::not($assertion);
 
         $this->assertSame(1, $this->handler->successCount());
-        $this->assertCount(1, $this->handler->failures());
+        $this->assertSame(1, $this->handler->failureCount());
     }
 
     /**
@@ -83,18 +74,18 @@ final class AssertTest extends TestCase
         $assertion = new NegatableAssertion(false);
 
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::that($assertion);
+        Assert::run($assertion);
 
         $this->assertSame(1, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
         Assert::not($assertion);
 
         $this->assertSame(1, $this->handler->successCount());
-        $this->assertCount(1, $this->handler->failures());
-        $this->assertSame('negation failed', $this->handler->lastFailure()->getMessage());
+        $this->assertSame(1, $this->handler->failureCount());
+        $this->assertSame('negation failed', $this->handler->lastFailureMessage());
     }
 
     /**
@@ -103,13 +94,13 @@ final class AssertTest extends TestCase
     public function true_success(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
         Assert::true(true, 'message1');
         Assert::true(\is_string('string'), 'message2');
 
         $this->assertSame(2, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
     }
 
     /**
@@ -118,16 +109,16 @@ final class AssertTest extends TestCase
     public function true_failure(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
         Assert::true(false, 'message1');
-        $this->assertSame('message1', $this->handler->lastFailure()->getMessage());
+        $this->assertSame('message1', $this->handler->lastFailureMessage());
 
         Assert::true(\is_string(5), 'message2 with %s', ['context']);
-        $this->assertSame('message2 with context', $this->handler->lastFailure()->getMessage());
+        $this->assertSame('message2 with context', $this->handler->lastFailureMessage());
 
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(2, $this->handler->failures());
+        $this->assertSame(2, $this->handler->failureCount());
     }
 
     /**
@@ -136,13 +127,13 @@ final class AssertTest extends TestCase
     public function false_success(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
         Assert::false(false, 'message1');
         Assert::false(\is_string(5), 'message2');
 
         $this->assertSame(2, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
     }
 
     /**
@@ -151,16 +142,16 @@ final class AssertTest extends TestCase
     public function false_failure(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
         Assert::false(true, 'message1');
-        $this->assertSame('message1', $this->handler->lastFailure()->getMessage());
+        $this->assertSame('message1', $this->handler->lastFailureMessage());
 
         Assert::false(\is_string('string'), 'message2 with %s', ['context']);
-        $this->assertSame('message2 with context', $this->handler->lastFailure()->getMessage());
+        $this->assertSame('message2 with context', $this->handler->lastFailureMessage());
 
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(2, $this->handler->failures());
+        $this->assertSame(2, $this->handler->failureCount());
     }
 
     /**
@@ -169,16 +160,16 @@ final class AssertTest extends TestCase
     public function generic_fail(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
         Assert::fail('message1');
-        $this->assertSame('message1', $this->handler->lastFailure()->getMessage());
+        $this->assertSame('message1', $this->handler->lastFailureMessage());
 
         Assert::fail('message2 with %s', ['context']);
-        $this->assertSame('message2 with context', $this->handler->lastFailure()->getMessage());
+        $this->assertSame('message2 with context', $this->handler->lastFailureMessage());
 
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(2, $this->handler->failures());
+        $this->assertSame(2, $this->handler->failureCount());
     }
 
     /**
@@ -187,112 +178,11 @@ final class AssertTest extends TestCase
     public function generic_pass(): void
     {
         $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
 
         Assert::pass();
 
         $this->assertSame(1, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_success_for_class_name(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
-
-        Assert::throws(\RuntimeException::class, function() { throw new \RuntimeException(); });
-        Assert::throws(\Throwable::class, function() { throw new \RuntimeException(); });
-
-        $this->assertSame(2, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_success_for_callable(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
-
-        Assert::throws(function(\RuntimeException $e) {}, function() { throw new \RuntimeException(); });
-
-        $expectedException = new \RuntimeException();
-        $actualException = null;
-
-        Assert::throws(
-            function(\Throwable $e) use (&$actualException) {
-                $actualException = $e;
-            },
-            function() use ($expectedException) {
-                throw $expectedException;
-            }
-        );
-
-        $this->assertSame($expectedException, $actualException);
-
-        $this->assertSame(2, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_failure_if_no_throw(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
-
-        Assert::throws(\RuntimeException::class, function() {});
-
-        $this->assertSame('No exception thrown. Expected "RuntimeException".', $this->handler->lastFailure()->getMessage());
-
-        $actualException = null;
-
-        Assert::throws(
-            function(\Throwable $e) use (&$actualException) {
-                $actualException = $e;
-            },
-            function() {}
-        );
-
-        $this->assertSame('No exception thrown. Expected "Throwable".', $this->handler->lastFailure()->getMessage());
-        $this->assertNull($actualException);
-
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(2, $this->handler->failures());
-    }
-
-    /**
-     * @test
-     */
-    public function throws_failure_if_mismatch(): void
-    {
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(0, $this->handler->failures());
-
-        Assert::throws(\RuntimeException::class, function() { throw new \Exception(); });
-
-        $this->assertSame('Expected "RuntimeException" to be thrown but got "Exception".', $this->handler->lastFailure()->getMessage());
-
-        $actualException = null;
-
-        Assert::throws(
-            function(\InvalidArgumentException $e) use (&$actualException) {
-                $actualException = $e;
-            },
-            function() {
-                throw new \RuntimeException();
-            }
-        );
-
-        $this->assertSame('Expected "InvalidArgumentException" to be thrown but got "RuntimeException".', $this->handler->lastFailure()->getMessage());
-        $this->assertNull($actualException);
-
-        $this->assertSame(0, $this->handler->successCount());
-        $this->assertCount(2, $this->handler->failures());
+        $this->assertSame(0, $this->handler->failureCount());
     }
 }

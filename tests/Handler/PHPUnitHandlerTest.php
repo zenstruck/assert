@@ -26,14 +26,9 @@ final class PHPUnitHandlerTest extends TestCase
 
         Assert::true(true, 'should not fail');
         Assert::false(false, 'should not fail');
-        Assert::that(function() {});
-        Assert::throws(\RuntimeException::class, function() { throw new \RuntimeException(); });
-        Assert::throws(
-            function(\RuntimeException $e) { $this->assertSame('some message', $e->getMessage()); },
-            function() { throw new \RuntimeException('some message'); }
-        );
+        Assert::run(function() {});
 
-        $this->assertSame(6, PHPUnit::getCount() - $initialPHPUnitAssertionCount);
+        $this->assertSame(3, PHPUnit::getCount() - $initialPHPUnitAssertionCount);
     }
 
     /**

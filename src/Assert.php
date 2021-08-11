@@ -3,8 +3,8 @@
 namespace Zenstruck;
 
 use Zenstruck\Assert\Assertion\Negatable;
-use Zenstruck\Assert\Assertion\ThrowsAssertion;
 use Zenstruck\Assert\AssertionFailed;
+use Zenstruck\Assert\Expectation;
 use Zenstruck\Assert\Handler;
 use Zenstruck\Assert\Not;
 
@@ -21,10 +21,12 @@ final class Assert
     }
 
     /**
+     * Execute an assertion.
+     *
      * @param callable():void $assertion Considered a "pass" if invoked successfully
      *                                   Considered a "fail" if {@see AssertionFailed} is thrown
      */
-    public static function that(callable $assertion): void
+    public static function run(callable $assertion): void
     {
         try {
             $assertion();
@@ -36,12 +38,14 @@ final class Assert
     }
 
     /**
+     * Execute a "negatable" assertion.
+     *
      * @param Negatable $assertion Considered a "pass" if {@see AssertionFailed} is thrown when invoked
      *                             Considered a "fail" if {@see AssertionFailed} is NOT thrown when invoked
      */
     public static function not(Negatable $assertion): void
     {
-        self::that(Not::wrap($assertion));
+        self::run(Not::wrap($assertion));
     }
 
     /**
@@ -49,7 +53,7 @@ final class Assert
      */
     public static function true(bool $expression, string $message, array $context = []): void
     {
-        self::that(static function() use ($expression, $message, $context) {
+        self::run(static function() use ($expression, $message, $context) {
             if (!$expression) {
                 AssertionFailed::throw($message, $context);
             }
@@ -69,7 +73,7 @@ final class Assert
      */
     public static function fail(string $message, array $context = []): void
     {
-        self::that(new AssertionFailed($message, $context));
+        self::run(new AssertionFailed($message, $context));
     }
 
     /**
@@ -81,11 +85,13 @@ final class Assert
     }
 
     /**
-     * @see ThrowsAssertion::expect()
+     * Use the expectation API.
+     *
+     * @param mixed $value
      */
-    public static function throws($exception, callable $during): void
+    public static function that($value): Expectation
     {
-        self::that(ThrowsAssertion::expect($exception, $during));
+        return new Expectation($value);
     }
 
     /**
