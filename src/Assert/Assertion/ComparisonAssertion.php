@@ -145,6 +145,22 @@ final class ComparisonAssertion extends EvaluableAssertion
 
     protected function defaultContext(): array
     {
-        return ['actual' => $this->actual, 'expected' => $this->expected];
+        $context = ['actual' => $this->actual, 'expected' => $this->expected];
+
+        if (!\in_array($this->comparison, [self::SAME, self::EQUAL], true)) {
+            return $context;
+        }
+
+        // SAME/EQUAL can add meta comparison context for PHPUnit handler
+
+        if (self::SAME === $this->comparison && (\is_object($this->actual) || \is_object($this->expected))) {
+            // when comparing if objects are "the same", don't add comparison
+            return $context;
+        }
+
+        return \array_merge($context, [
+            'compare_expected' => $this->expected,
+            'compare_actual' => $this->actual,
+        ]);
     }
 }

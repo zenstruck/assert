@@ -3,6 +3,8 @@
 namespace Zenstruck\Assert\Handler;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 use SebastianBergmann\Exporter\Exporter;
 use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Handler;
@@ -37,11 +39,15 @@ final class PHPUnitHandler implements Handler
 
     private static function failureMessage(AssertionFailed $exception): string
     {
-        $message = $exception->getMessage();
+        $context = $exception->context();
+        $message = $exception->getMessage().self::addComparison($context);
 
-        if (!($context = $exception->context()) || !self::isVerbose()) {
+        if (!$context || !self::isVerbose()) {
             return $message;
         }
+
+        // don't show meta-context in context dump
+        unset($context['compare_expected'], $context['compare_actual']);
 
         $message .= "\n\nFailure Context:\n\n";
         $exporter = new Exporter();
@@ -58,5 +64,22 @@ final class PHPUnitHandler implements Handler
         }
 
         return $message;
+    }
+
+    private static function addComparison(array $context): string
+    {
+        $expected = $context['compare_expected'] ?? null;
+        $actual = $context['compare_actual'] ?? null;
+
+        try {
+            ComparatorFactory::getInstance()
+                ->getComparatorFor($expected, $actual)
+                ->assertEquals($expected, $actual)
+            ;
+        } catch (ComparisonFailure $e) {
+            return $e->getDiff();
+        }
+
+        return '';
     }
 }
