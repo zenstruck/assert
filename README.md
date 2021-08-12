@@ -210,6 +210,28 @@ Assert::that(fn() => $code->thatThrowsException())->throws(
 );
 ```
 
+### Fluent Expectations
+
+```php
+use Zenstruck\Assert;
+
+// chain expectations on the same "value"
+Assert::that(['foo', 'bar'])
+    ->hasCount(2)
+    ->contains('foo')
+    ->contains('bar')
+    ->doesNotContain('baz')
+;
+
+// start an additional expectation without breaking
+Assert::that(['foo', 'bar'])
+    ->hasCount(2)
+    ->contains('foo')
+    ->and('foobar') // start a new expectation with "foobar" as the new expectation value
+    ->contains('bar')
+;
+```
+
 ## `AssertionFailed` Exception
 
 When triggering a failed assertion, it is important to provide a useful failure

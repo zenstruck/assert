@@ -26,6 +26,16 @@ final class Expectation
     }
 
     /**
+     * Start another expectation with a new value.
+     *
+     * @param mixed $value
+     */
+    public function and($value): self
+    {
+        return new self($value);
+    }
+
+    /**
      * Assert the expectation value is empty (if countable, has a count of 0).
      *
      * @param string|null $message Available context: {actual}, {count} (if countable)

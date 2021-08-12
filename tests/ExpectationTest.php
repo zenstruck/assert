@@ -449,6 +449,36 @@ final class ExpectationTest extends TestCase
         ;
     }
 
+    /**
+     * @test
+     */
+    public function can_chain_expectaions(): void
+    {
+        $this->assertSuccess(4, function() {
+            Assert::that(['foo', 'bar'])
+                ->hasCount(2)
+                ->contains('foo')
+                ->contains('bar')
+                ->doesNotContain('baz')
+            ;
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function can_use_and(): void
+    {
+        $this->assertSuccess(3, function() {
+            Assert::that(['foo', 'bar'])
+                ->hasCount(2)
+                ->contains('foo')
+                ->and('foobar')
+                ->contains('bar')
+            ;
+        });
+    }
+
     private function assertSuccess(int $expectedCount, callable $what): self
     {
         $this->handler->reset();
