@@ -325,6 +325,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "2" to be greater than "3".', function() { Assert::that('2')->isGreaterThan('3'); })
             ->assertFails('Expected "2" to be greater than "3".', function() { Assert::that(2)->isGreaterThan('3'); })
             ->assertFails('Expected "2" to be greater than "2.1".', function() { Assert::that(2)->isGreaterThan(2.1); })
+            ->assertFails('fail 2 3 value', function() { Assert::that(2)->isGreaterThan(3, 'fail {actual} {expected} {custom}', ['custom' => 'value']); })
         ;
     }
 
@@ -347,6 +348,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "2" to be greater than or equal to "3".', function() { Assert::that('2')->isGreaterThanOrEqualTo('3'); })
             ->assertFails('Expected "2" to be greater than or equal to "3".', function() { Assert::that(2)->isGreaterThanOrEqualTo('3'); })
             ->assertFails('Expected "2" to be greater than or equal to "2.1".', function() { Assert::that(2)->isGreaterThanOrEqualTo(2.1); })
+            ->assertFails('fail 2 3 value', function() { Assert::that(2)->isGreaterThanOrEqualTo(3, 'fail {actual} {expected} {custom}', ['custom' => 'value']); })
         ;
     }
 
@@ -369,6 +371,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "2" to be less than "1".', function() { Assert::that('2')->isLessThan('1'); })
             ->assertFails('Expected "2" to be less than "1".', function() { Assert::that(2)->isLessThan('1'); })
             ->assertFails('Expected "2.1" to be less than "2".', function() { Assert::that(2.1)->isLessThan(2); })
+            ->assertFails('fail 3 2 value', function() { Assert::that(3)->isLessThan(2, 'fail {actual} {expected} {custom}', ['custom' => 'value']); })
         ;
     }
 
@@ -391,6 +394,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "4" to be less than or equal to "3".', function() { Assert::that('4')->isLessThanOrEqualTo('3'); })
             ->assertFails('Expected "4" to be less than or equal to "3".', function() { Assert::that(4)->isLessThanOrEqualTo('3'); })
             ->assertFails('Expected "2.1" to be less than or equal to "2".', function() { Assert::that(2.1)->isLessThanOrEqualTo(2); })
+            ->assertFails('fail 3 2 value', function() { Assert::that(3)->isLessThanOrEqualTo(2, 'fail {actual} {expected} {custom}', ['custom' => 'value']); })
         ;
     }
 
