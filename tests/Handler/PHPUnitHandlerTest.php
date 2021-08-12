@@ -7,6 +7,7 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
 use Zenstruck\Assert\Handler\PHPUnitHandler;
+use Zenstruck\Assert\Tests\AssertionFailedTest;
 use Zenstruck\Assert\Tests\Fixture\CountableObject;
 use Zenstruck\Assert\Tests\Fixture\NegatableAssertion;
 use Zenstruck\Assert\Tests\ResetHandler;
@@ -62,12 +63,12 @@ final class PHPUnitHandlerTest extends TestCase
 
         try {
             Assert::true(false, 'this fails {string} {array} {object}', [
-                'string' => 'The quick brown fox jumps over the lazy dog',
+                'string' => AssertionFailedTest::LONG,
                 'array' => ['an' => 'array'],
                 'object' => $this,
             ]);
         } catch (AssertionFailedError $e) {
-            $this->assertSame(\sprintf('this fails The quick brown fox jumps o...e lazy dog (array) %s', __CLASS__), $e->getMessage());
+            $this->assertSame(\sprintf('this fails %s (array) %s', AssertionFailedTest::SHORT, __CLASS__), $e->getMessage());
 
             return;
         }
@@ -86,17 +87,17 @@ final class PHPUnitHandlerTest extends TestCase
 
         try {
             Assert::true(false, 'this fails {string} {array} {object1} {object2}', [
-                'string' => 'The quick brown fox jumps over the lazy dog',
+                'string' => AssertionFailedTest::LONG,
                 'array' => ['an' => 'array'],
                 'object1' => $this,
                 'object2' => new NegatableAssertion(true),
             ]);
         } catch (AssertionFailedError $e) {
             $this->assertStringContainsString(
-                \sprintf("this fails The quick brown fox jumps o...e lazy dog (array) %s %s\n\nFailure Context:", __CLASS__, NegatableAssertion::class),
+                \sprintf("this fails %s (array) %s %s\n\nFailure Context:", AssertionFailedTest::SHORT, __CLASS__, NegatableAssertion::class),
                 $e->getMessage()
             );
-            $this->assertStringContainsString("[string]\n'The quick brown fox jumps over the lazy dog'", $e->getMessage());
+            $this->assertStringContainsString(\sprintf("[string]\n'%s'", AssertionFailedTest::LONG), $e->getMessage());
             $this->assertStringContainsString("[array]\nArray &0 (\n    'an' => 'array'\n)", $e->getMessage());
             $this->assertStringContainsString(\sprintf("[object1]\n%s Object (...)", __CLASS__), $e->getMessage());
             $this->assertStringContainsString(\sprintf("object2]\n%s Object &", NegatableAssertion::class), $e->getMessage());

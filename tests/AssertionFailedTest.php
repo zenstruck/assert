@@ -10,6 +10,9 @@ use Zenstruck\Assert\AssertionFailed;
  */
 final class AssertionFailedTest extends TestCase
 {
+    public const LONG = "If you're looking for random paragraphs, you've come to the right place. When a random word or a random sentence isn't quite enough, the next logical step is to find a random paragraph. We created the Random Paragraph Generator with you in mind. The process is quite simple. Choose the number of random paragraphs you'd like to see and click the button. Your chosen number of paragraphs will instantly appear.";
+    public const SHORT = "If you're looking for random paragraphs, you've come to t...ber of paragraphs will instantly appear.";
+
     /**
      * @test
      */
@@ -29,14 +32,14 @@ final class AssertionFailedTest extends TestCase
                 new \stdClass(),
                 null,
                 ['an', 'array'],
-                'The quick brown fox jumps over the lazy dog',
+                self::LONG,
                 "string\nwith\n\rline\nbreak",
                 false,
                 true,
             ]
         );
 
-        $this->assertSame('message 1 string 4.3 stdClass (null) (array) The quick brown fox jumps o...e lazy dog string with line break (false) (true)', $exception->getMessage());
+        $this->assertSame(\sprintf('message 1 string 4.3 stdClass (null) (array) %s string with line break (false) (true)', self::SHORT), $exception->getMessage());
         $this->assertSame($expected, $exception->context());
     }
 
@@ -47,14 +50,14 @@ final class AssertionFailedTest extends TestCase
     {
         $object = new \stdClass();
         $messageTemplate = 'message {int} {string1} {float} {object} {array} {string2} {string3} {false} {true}';
-        $expectedMessage = 'message 1 value 4.3 stdClass (array) The quick brown fox jumps o...e lazy dog string with line break (false) (true)';
+        $expectedMessage = \sprintf('message 1 value 4.3 stdClass (array) %s string with line break (false) (true)', self::SHORT);
         $expectedContext = [
             'int' => 1,
             'string1' => 'value',
             'float' => 4.3,
             'object' => $object,
             'array' => ['foo'],
-            'string2' => 'The quick brown fox jumps over the lazy dog',
+            'string2' => self::LONG,
             'string3' => "string\nwith\n\rline\nbreak",
             'false' => false,
             'true' => true,
@@ -71,7 +74,7 @@ final class AssertionFailedTest extends TestCase
             'float' => 4.3,
             '{object}' => $object,
             '{array}' => ['foo'],
-            '{string2}' => 'The quick brown fox jumps over the lazy dog',
+            '{string2}' => self::LONG,
             '{string3}' => "string\nwith\n\rline\nbreak",
             '{false}' => false,
             '{true}' => true,

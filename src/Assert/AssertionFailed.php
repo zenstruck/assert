@@ -7,6 +7,8 @@ namespace Zenstruck\Assert;
  */
 final class AssertionFailed extends \RuntimeException
 {
+    private const MAX_SHORT_LENGTH = 100;
+
     /** @var array */
     private $context;
 
@@ -69,11 +71,12 @@ final class AssertionFailed extends \RuntimeException
 
         $value = \preg_replace('/\s+/', ' ', $value);
 
-        if (\mb_strlen($value) <= 40) {
+        if (\mb_strlen($value) <= self::MAX_SHORT_LENGTH) {
             return $value;
         }
 
-        return \sprintf('%s...%s', \mb_substr($value, 0, 27), \mb_substr($value, -10));
+        // shorten to max
+        return \sprintf('%s...%s', \mb_substr($value, 0, self::MAX_SHORT_LENGTH - 40 - 3), \mb_substr($value, -40));
     }
 
     private static function normalizeContext(array $context): array
