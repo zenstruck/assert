@@ -7,6 +7,7 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
 use Zenstruck\Assert\Handler\PHPUnitHandler;
+use Zenstruck\Assert\Tests\Fixture\CountableObject;
 use Zenstruck\Assert\Tests\Fixture\NegatableAssertion;
 use Zenstruck\Assert\Tests\ResetHandler;
 
@@ -105,5 +106,92 @@ final class PHPUnitHandlerTest extends TestCase
         }
 
         PHPUnit::fail('No PHPUnit failure.');
+    }
+
+    /**
+     * @test
+     */
+    public function php_unit_displays_comparisons_if_applicable(): void
+    {
+        $this->assertComparison(function() { Assert::that('foo')->is('bar'); }, ["-'bar'", "+'foo'"]);
+        $this->assertComparison(function() { Assert::that('foo')->equals('bar'); });
+        $this->assertComparison(function() { Assert::that('6')->is('bar'); });
+        $this->assertComparison(function() { Assert::that('6')->equals('bar'); });
+        $this->assertComparison(function() { Assert::that(['foo'])->is(['bar']); }, ["-    0 => 'bar'", "+    0 => 'foo'"]);
+        $this->assertComparison(function() { Assert::that(['foo'])->equals(['bar']); });
+        $this->assertComparison(function() { Assert::that(new \DateTime('yesterday'))->equals(new \DateTime()); });
+        $this->assertComparison(function() { Assert::that(new \DateTime('yesterday'))->equals(new \DateTimeImmutable()); });
+        $this->assertComparison(
+            function() { Assert::that(new CountableObject(2))->equals(new CountableObject(3)); },
+            [
+                "-    'count' => 3",
+                "+    'count' => 2",
+                ' Zenstruck\\Assert\\Tests\\Fixture\\CountableObject Object (',
+            ]
+        );
+
+        $this->assertNoComparison(function() { Assert::that(6)->is('bar'); });
+        $this->assertNoComparison(function() { Assert::that(['foo', 'bar'])->isNotEqualTo(['foo', 'bar']); });
+        $this->assertNoComparison(function() { Assert::that('6')->isNotEqualTo(6); });
+        $this->assertNoComparison(function() { Assert::that('6')->isNot('6'); });
+        $this->assertNoComparison(function() { Assert::that('6')->is(6); });
+        $this->assertNoComparison(function() { Assert::that(6)->isGreaterThan(7); });
+        $this->assertNoComparison(function() { Assert::that(new \DateTime('today'))->isGreaterThan(new \DateTime('tomorrow')); });
+        $this->assertNoComparison(function() { Assert::that(new CountableObject(2))->isNotEqualTo(new CountableObject(2)); });
+        $this->assertNoComparison(function() { Assert::that(new CountableObject(2))->is(new CountableObject(2)); });
+        $this->assertNoComparison(function() { Assert::that(new CountableObject(2))->is(new CountableObject(3)); });
+    }
+
+    /**
+     * @test
+     */
+    public function verbose_output_does_not_contain_comparison(): void
+    {
+        if (!PHPUnitHandler::isVerbose()) {
+            $this->markTestSkipped('Skip if not verbose.');
+        }
+
+        try {
+            Assert::that('foo')->equals('bar');
+        } catch (AssertionFailedError $e) {
+            $this->assertStringContainsString('[expected]', $e->getMessage());
+            $this->assertStringContainsString('[actual]', $e->getMessage());
+            $this->assertStringNotContainsString('[compare_expected]', $e->getMessage());
+            $this->assertStringNotContainsString('[compare_actual]', $e->getMessage());
+
+            return;
+        }
+
+        $this->fail('Did not fail.');
+    }
+
+    private function assertComparison(callable $callback, array $expectedStrings = []): void
+    {
+        try {
+            $callback();
+        } catch (AssertionFailedError $e) {
+            $this->assertStringContainsString("--- Expected\n+++ Actual\n@@ @@", $e->getMessage());
+
+            foreach ($expectedStrings as $string) {
+                $this->assertStringContainsString($string, $e->getMessage());
+            }
+
+            return;
+        }
+
+        $this->fail('Did not fail.');
+    }
+
+    private function assertNoComparison(callable $callback): void
+    {
+        try {
+            $callback();
+        } catch (AssertionFailedError $e) {
+            $this->assertStringNotContainsString('--- Expected', $e->getMessage());
+
+            return;
+        }
+
+        $this->fail('Did not fail.');
     }
 }
