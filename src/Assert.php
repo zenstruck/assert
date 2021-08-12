@@ -70,6 +70,8 @@ final class Assert
 
     /**
      * Trigger a generic assertion failure.
+     *
+     * @return never-return
      */
     public static function fail(string $message, array $context = []): void
     {
