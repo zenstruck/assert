@@ -256,7 +256,7 @@ AssertionFailed::throw('Expected "{expected}" but got "{actual}"', [ // Expected
 
 **NOTES:**
 1. When the message is constructed with context, non-scalar values are run through
-`get_debug_type()` and strings longer than _40_ characters are trimmed. The full context
+`get_debug_type()` and strings longer than _100_ characters are trimmed. The full context
 is available via `AssertionFailed::context()`.
 2. When using with PHPUnit, the full context is exported with the failure message if in
 _verbose-mode_ (`--verbose|-v`).
