@@ -60,6 +60,32 @@ final class Expectation
     }
 
     /**
+     * Assert the expectation value is null.
+     *
+     * @param string|null $message Available context: {actual}
+     */
+    public function isNull(?string $message = null, array $context = []): self
+    {
+        Assert::true(
+            null === $this->value,
+            $message ?? 'Expected "{actual}" to be null.',
+            \array_merge(['actual' => $this->value], $context)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Assert the expectation value is NOT null.
+     */
+    public function isNotNull(?string $message = null, array $context = []): self
+    {
+        Assert::false(null === $this->value, $message ?? 'Expected the value to not be null.', $context);
+
+        return $this;
+    }
+
+    /**
      * Assert the expectation value has the expected $count.
      *
      * @param string|null $message Available context: {expected}, {actual}, {haystack}

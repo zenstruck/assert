@@ -309,6 +309,36 @@ final class ExpectationTest extends TestCase
     /**
      * @test
      */
+    public function is_null(): void
+    {
+        $this->assertSuccess(1, function() {
+            Assert::that(null)->isNull();
+        });
+
+        $this
+            ->assertFails('Expected "5" to be null.', function() { Assert::that(5)->isNull(); })
+            ->assertFails('fail foo value', function() { Assert::that('foo')->isNull('fail {actual} {custom}', ['custom' => 'value']); })
+        ;
+    }
+
+    /**
+     * @test
+     */
+    public function is_not_null(): void
+    {
+        $this->assertSuccess(1, function() {
+            Assert::that('foo')->isNotNull();
+        });
+
+        $this
+            ->assertFails('Expected the value to not be null.', function() { Assert::that(null)->isNotNull(); })
+            ->assertFails('fail value', function() { Assert::that('foo')->isNull('fail {custom}', ['custom' => 'value']); })
+        ;
+    }
+
+    /**
+     * @test
+     */
     public function is_greater_than(): void
     {
         $this->assertSuccess(5, function() {

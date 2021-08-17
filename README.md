@@ -105,6 +105,13 @@ Assert::that(['foo'])->isEmpty(); // fail
 Assert::that(null)->isNotEmpty(); // fail
 Assert::that('value')->isNotEmpty(); // pass
 
+// null
+Assert::that(null)->isNull(); // pass
+Assert::that('foo')->isNull(); // fail
+
+Assert::that(null)->isNotNull(); // fail
+Assert::that('value')->isNotNull(); // pass
+
 // count
 Assert::that([1, 2])->hasCount(2); // pass
 Assert::that(new \ArrayIterator([1, 2, 3]))->hasCount(2); // fail
