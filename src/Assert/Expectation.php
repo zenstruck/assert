@@ -86,6 +86,38 @@ final class Expectation
     }
 
     /**
+     * Assert the expectation is an instance of $expected.
+     *
+     * @param string|null $message Available context: {actual}, {expected}
+     */
+    public function isInstanceOf(string $expected, ?string $message = null, array $context = []): self
+    {
+        Assert::true(
+            $this->value instanceof $expected,
+            $message ?? 'Expected "{actual}" to be an instance of "{expected}".',
+            \array_merge(['expected' => $expected, 'actual' => $this->value], $context)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Assert the expectation is NOT an instance of $expected.
+     *
+     * @param string|null $message Available context: {actual}, {expected}
+     */
+    public function isNotInstanceOf(string $expected, ?string $message = null, array $context = []): self
+    {
+        Assert::false(
+            $this->value instanceof $expected,
+            $message ?? 'Expected "{actual}" to not be an instance of "{expected}".',
+            \array_merge(['expected' => $expected, 'actual' => $this->value], $context)
+        );
+
+        return $this;
+    }
+
+    /**
      * Assert the expectation value has the expected $count.
      *
      * @param string|null $message Available context: {expected}, {actual}, {haystack}

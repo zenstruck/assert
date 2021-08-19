@@ -431,6 +431,52 @@ final class ExpectationTest extends TestCase
     /**
      * @test
      */
+    public function is_instance_of(): void
+    {
+        $this->assertSuccess(2, function() {
+            Assert::that($this)->isInstanceOf(__CLASS__);
+            Assert::that($this)->isInstanceOf(TestCase::class);
+        });
+
+        $this
+            ->assertFails(\sprintf('Expected "%s" to be an instance of "%s".', __CLASS__, Assert::class), function() { Assert::that($this)->isInstanceOf(Assert::class); })
+            ->assertFails(\sprintf('Expected "(null)" to be an instance of "%s".', Assert::class), function() { Assert::that(null)->isInstanceOf(Assert::class); })
+            ->assertFails(\sprintf('Expected "6" to be an instance of "%s".', Assert::class), function() { Assert::that(6)->isInstanceOf(Assert::class); })
+            ->assertFails(\sprintf('Expected "%s" to be an instance of "foo".', __CLASS__), function() { Assert::that($this)->isInstanceOf('foo'); })
+            ->assertFails('fail bar foo value', function() { Assert::that('bar')->isInstanceOf('foo', 'fail {actual} {expected} {custom}', ['custom' => 'value']); })
+        ;
+    }
+
+    /**
+     * @test
+     */
+    public function is_not_instance_of(): void
+    {
+        $this->assertSuccess(3, function() {
+            Assert::that($this)->isNotInstanceOf(Assert::class);
+            Assert::that(null)->isNotInstanceOf(TestCase::class);
+            Assert::that(6)->isNotInstanceOf('foo');
+        });
+
+        $this
+            ->assertFails(
+                \sprintf('Expected "%s" to not be an instance of "%s".', __CLASS__, __CLASS__),
+                function() { Assert::that($this)->isNotInstanceOf(__CLASS__); }
+            )
+            ->assertFails(
+                \sprintf('Expected "%s" to not be an instance of "%s".', __CLASS__, TestCase::class),
+                function() { Assert::that($this)->isNotInstanceOf(TestCase::class); }
+            )
+            ->assertFails(
+                \sprintf('fail %s %s value', __CLASS__, TestCase::class),
+                function() { Assert::that($this)->isNotInstanceOf(TestCase::class, 'fail {actual} {expected} {custom}', ['custom' => 'value']); }
+            )
+        ;
+    }
+
+    /**
+     * @test
+     */
     public function throws(): void
     {
         $this->assertSuccess(8, function() {
