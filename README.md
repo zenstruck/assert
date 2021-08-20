@@ -65,6 +65,22 @@ Assert::fail('This is a failure.');
 Assert::pass();
 ```
 
+## Try
+
+```php
+use Zenstruck\Assert;
+
+$ret = Assert::try(fn() => 'value'); // $ret === 'value'
+
+Assert::try(fn() => throw new \RuntimeException('exception message')); // "fails" with message "exception message"
+
+// customize the failure message
+Assert::try(
+    fn() => throw new \RuntimeException('exception message'),
+    'Tried to run the code but {exception} was thrown.'
+); // "fails" with message "Tried to run the code but {exception} was thrown."
+```
+
 ## _Run_ Assertions
 
 `Assert::run()` executes a `callable`. A successful execution is considered

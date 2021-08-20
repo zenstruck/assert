@@ -87,6 +87,28 @@ final class Assert
     }
 
     /**
+     * Returns the value of $callback and if an exception is thrown, trigger a "fail".
+     *
+     * @param string|null $message If not passed, use thrown exception message. Available context: {exception}
+     *
+     * @return mixed The return value of executing $callback
+     */
+    public static function try(callable $callback, ?string $message = null, array $context = [])
+    {
+        try {
+            return $callback();
+        } catch (\Throwable $e) {
+            self::run(new AssertionFailed(
+                $message ?? $e->getMessage(),
+                \array_merge(['exception' => $e], $context),
+                $e
+            ));
+        }
+
+        return null;
+    }
+
+    /**
      * Use the expectation API.
      *
      * @param mixed $value
