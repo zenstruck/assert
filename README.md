@@ -77,8 +77,8 @@ Assert::try(fn() => throw new \RuntimeException('exception message')); // "fails
 // customize the failure message
 Assert::try(
     fn() => throw new \RuntimeException('exception message'),
-    'Tried to run the code but {exception} was thrown.'
-); // "fails" with message "Tried to run the code but {exception} was thrown."
+    'Tried to run the code but {exception} with message "{message}" was thrown.'
+); // "fails" with message 'Tried to run the code but RuntimeException with message "exception message" was thrown.'
 ```
 
 ## _Run_ Assertions

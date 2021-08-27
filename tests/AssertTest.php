@@ -211,7 +211,7 @@ final class AssertTest extends TestCase
 
         $value1 = Assert::try(function() { throw new \RuntimeException('exception message'); });
         $value2 = Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message');
-        $value3 = Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message {context} {exception}', ['context' => 'value']);
+        $value3 = Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message {context} {exception} {message}', ['context' => 'value']);
 
         $this->assertNull($value1);
         $this->assertNull($value2);
@@ -223,6 +223,6 @@ final class AssertTest extends TestCase
         $this->assertInstanceOf(\RuntimeException::class, $this->handler->failures()[2]->getPrevious());
         $this->assertSame('exception message', $this->handler->failures()[0]->getMessage());
         $this->assertSame('override message', $this->handler->failures()[1]->getMessage());
-        $this->assertSame('override message value RuntimeException', $this->handler->failures()[2]->getMessage());
+        $this->assertSame('override message value RuntimeException exception message', $this->handler->failures()[2]->getMessage());
     }
 }

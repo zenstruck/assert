@@ -89,7 +89,8 @@ final class Assert
     /**
      * Returns the value of $callback and if an exception is thrown, trigger a "fail".
      *
-     * @param string|null $message If not passed, use thrown exception message. Available context: {exception}
+     * @param string|null $message If not passed, use thrown exception message.
+     *                             Available context: {exception}, {message}
      *
      * @return mixed The return value of executing $callback
      */
@@ -100,7 +101,7 @@ final class Assert
         } catch (\Throwable $e) {
             self::run(new AssertionFailed(
                 $message ?? $e->getMessage(),
-                \array_merge(['exception' => $e], $context),
+                \array_merge(['exception' => $e, 'message' => $e->getMessage()], $context),
                 $e
             ));
         }
