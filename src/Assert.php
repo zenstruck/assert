@@ -71,11 +71,15 @@ final class Assert
     /**
      * Trigger a generic assertion failure.
      *
-     * @return never-return
+     * @return never
+     *
+     * @throws \Throwable
      */
     public static function fail(string $message, array $context = []): void
     {
-        self::run(new AssertionFailed($message, $context));
+        self::run($e = new AssertionFailed($message, $context));
+
+        throw $e;
     }
 
     /**

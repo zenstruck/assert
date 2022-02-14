@@ -18,6 +18,8 @@
         "symfony/polyfill-php81": "^1.23"
     },
     "require-dev": {
+        "phpstan/phpstan": "^1.4",
+        "phpstan/phpstan-phpunit": "^1.0",
         "symfony/phpunit-bridge": "^5.3"
     },
     "config": {

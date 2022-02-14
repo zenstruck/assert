@@ -19,6 +19,9 @@ final class AssertionFailed extends \RuntimeException
         parent::__construct(self::createMessage($message, $context), 0, $previous);
     }
 
+    /**
+     * @return never
+     */
     public function __invoke(): void
     {
         throw $this;
@@ -27,7 +30,7 @@ final class AssertionFailed extends \RuntimeException
     /**
      * Create and throw.
      *
-     * @psalm-return no-return
+     * @return never
      */
     public static function throw(string $message, array $context = [], ?\Throwable $previous = null): void
     {
@@ -55,6 +58,9 @@ final class AssertionFailed extends \RuntimeException
         return \strtr($template, self::normalizeContext($context));
     }
 
+    /**
+     * @param mixed $value
+     */
     private static function normalizeContextValue($value): string
     {
         if (\is_object($value)) {
@@ -69,7 +75,7 @@ final class AssertionFailed extends \RuntimeException
             return \sprintf('(%s)', \var_export($value, true));
         }
 
-        $value = \preg_replace('/\s+/', ' ', $value);
+        $value = (string) \preg_replace('/\s+/', ' ', (string) $value);
 
         if (\mb_strlen($value) <= self::MAX_SHORT_LENGTH) {
             return $value;

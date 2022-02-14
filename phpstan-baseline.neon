@@ -1,0 +1,37 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$assertion of static method Zenstruck\\\\Assert\\:\\:run\\(\\) expects callable\\(\\)\\: void, Closure\\(\\)\\: 'value' given\\.$#"
+			count: 1
+			path: tests/AssertTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$haystack of class Zenstruck\\\\Assert\\\\Assertion\\\\ContainsAssertion constructor expects bool\\|float\\|int\\|iterable\\|string, stdClass given\\.$#"
+			count: 1
+			path: tests/Assertion/ContainsAssertionTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$haystack of class Zenstruck\\\\Assert\\\\Assertion\\\\CountAssertion constructor expects Countable\\|iterable, int given\\.$#"
+			count: 1
+			path: tests/Assertion/CountAssertionTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$expectedException of class Zenstruck\\\\Assert\\\\Assertion\\\\ThrowsAssertion constructor expects \\(callable\\(Throwable\\)\\: void\\)\\|string, Closure\\(string\\)\\: void given\\.$#"
+			count: 1
+			path: tests/Assertion/ThrowsAssertionTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$expectedException of class Zenstruck\\\\Assert\\\\Assertion\\\\ThrowsAssertion constructor expects \\(callable\\(Throwable\\)\\: void\\)\\|string, array\\{\\} given\\.$#"
+			count: 1
+			path: tests/Assertion/ThrowsAssertionTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$expectedException of method Zenstruck\\\\Assert\\\\Expectation\\:\\:throws\\(\\) expects \\(callable\\(Throwable\\)\\: void\\)\\|string, Closure\\(Exception\\)\\: void given\\.$#"
+			count: 3
+			path: tests/ExpectationTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$expectedException of method Zenstruck\\\\Assert\\\\Expectation\\:\\:throws\\(\\) expects \\(callable\\(Throwable\\)\\: void\\)\\|string, Closure\\(RuntimeException\\)\\: void given\\.$#"
+			count: 3
+			path: tests/ExpectationTest.php
+
