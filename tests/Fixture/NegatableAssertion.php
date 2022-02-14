@@ -10,6 +10,7 @@ use Zenstruck\Assert\AssertionFailed;
  */
 final class NegatableAssertion implements Negatable
 {
+    /** @var bool */
     private $fail;
 
     public function __construct(bool $fail)

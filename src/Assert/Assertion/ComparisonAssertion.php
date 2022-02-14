@@ -23,6 +23,10 @@ final class ComparisonAssertion extends EvaluableAssertion
     /** @var string */
     private $comparison;
 
+    /**
+     * @param mixed $actual
+     * @param mixed $expected
+     */
     private function __construct($actual, $expected, string $comparison, ?string $message = null, array $context = [])
     {
         $this->actual = $actual;

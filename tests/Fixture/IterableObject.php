@@ -4,9 +4,12 @@ namespace Zenstruck\Assert\Tests\Fixture;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
+ *
+ * @implements \IteratorAggregate<int|string, mixed>
  */
 final class IterableObject implements \IteratorAggregate
 {
+    /** @var array */
     private $value;
 
     public function __construct(array $value)

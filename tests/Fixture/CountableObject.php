@@ -7,6 +7,7 @@ namespace Zenstruck\Assert\Tests\Fixture;
  */
 final class CountableObject implements \Countable
 {
+    /** @var int */
     private $count;
 
     public function __construct(int $count)

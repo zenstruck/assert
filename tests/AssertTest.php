@@ -114,7 +114,7 @@ final class AssertTest extends TestCase
         Assert::true(false, 'message1');
         $this->assertSame('message1', $this->handler->lastFailureMessage());
 
-        Assert::true(\is_string(5), 'message2 with %s', ['context']);
+        Assert::true(false, 'message2 with %s', ['context']);
         $this->assertSame('message2 with context', $this->handler->lastFailureMessage());
 
         $this->assertSame(0, $this->handler->successCount());
@@ -130,7 +130,7 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->failureCount());
 
         Assert::false(false, 'message1');
-        Assert::false(\is_string(5), 'message2');
+        Assert::false(false, 'message2');
 
         $this->assertSame(2, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
@@ -162,10 +162,18 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::fail('message1');
+        try {
+            Assert::fail('message1');
+        } catch (AssertionFailed $e) {
+        }
+
         $this->assertSame('message1', $this->handler->lastFailureMessage());
 
-        Assert::fail('message2 with %s', ['context']);
+        try {
+            Assert::fail('message2 with %s', ['context']);
+        } catch (AssertionFailed $e) {
+        }
+
         $this->assertSame('message2 with context', $this->handler->lastFailureMessage());
 
         $this->assertSame(0, $this->handler->successCount());
