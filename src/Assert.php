@@ -23,8 +23,8 @@ final class Assert
     /**
      * Execute an assertion.
      *
-     * @param callable():void $assertion Considered a "pass" if invoked successfully
-     *                                   Considered a "fail" if {@see AssertionFailed} is thrown
+     * @param callable():mixed $assertion Considered a "pass" if invoked successfully
+     *                                    Considered a "fail" if {@see AssertionFailed} is thrown
      */
     public static function run(callable $assertion): void
     {

@@ -22,15 +22,15 @@ final class ThrowsAssertion
     private $onCatch;
 
     /**
-     * @param callable                         $during            Considered a "fail" if, when invoked,
-     *                                                            $expectedException isn't thrown
-     * @param string|callable(\Throwable):void $expectedException string: class name of the expected exception
-     *                                                            callable: uses the first argument's type-hint
-     *                                                            to determine the expected exception class. When
-     *                                                            exception is caught, callable is invoked with
-     *                                                            the caught exception
-     * @param string|null                      $expectedMessage   Assert the caught exception message "contains"
-     *                                                            this string
+     * @param callable        $during            Considered a "fail" if, when invoked,
+     *                                           $expectedException isn't thrown
+     * @param string|callable $expectedException string: class name of the expected exception
+     *                                           callable: uses the first argument's type-hint
+     *                                           to determine the expected exception class. When
+     *                                           exception is caught, callable is invoked with
+     *                                           the caught exception
+     * @param string|null     $expectedMessage   Assert the caught exception message "contains"
+     *                                           this string
      */
     public function __construct(callable $during, $expectedException, ?string $expectedMessage = null)
     {
