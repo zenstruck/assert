@@ -91,26 +91,37 @@ final class Assert
     }
 
     /**
-     * Returns the value of $callback and if an exception is thrown, trigger a "fail".
+     * Execute a callback and return the result. If an exception is thrown,
+     * trigger a "fail", if not, trigger a "pass".
      *
-     * @param string|null $message If not passed, use thrown exception message.
-     *                             Available context: {exception}, {message}
+     * @template T
      *
-     * @return mixed The return value of executing $callback
+     * @param callable():T $callback Considered a "pass" if invoked successfully
+     *                               Considered a "fail" if an exception is thrown
+     * @param string|null  $message  If not passed, use thrown exception message.
+     *                               Available context: {exception}, {message}
+     *
+     * @return T The return value of executing $callback
+     *
+     * @throws AssertionFailed If an exception is thrown when executing the $callback
      */
     public static function try(callable $callback, ?string $message = null, array $context = [])
     {
         try {
-            return $callback();
+            $ret = $callback();
         } catch (\Throwable $e) {
-            self::run(new AssertionFailed(
+            self::run($e = new AssertionFailed(
                 $message ?? $e->getMessage(),
                 \array_merge(['exception' => $e, 'message' => $e->getMessage()], $context),
                 $e
             ));
+
+            throw $e;
         }
 
-        return null;
+        self::pass();
+
+        return $ret;
     }
 
     /**

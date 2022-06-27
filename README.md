@@ -1,7 +1,6 @@
 # zenstruck/assert
 
 [![CI Status](https://github.com/zenstruck/assert/workflows/CI/badge.svg)](https://github.com/zenstruck/assert/actions?query=workflow%3ACI)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zenstruck/assert/badges/quality-score.png?b=1.x)](https://scrutinizer-ci.com/g/zenstruck/assert/?branch=1.x)
 [![Code Coverage](https://codecov.io/gh/zenstruck/assert/branch/1.x/graph/badge.svg?token=R7OHYYGPKM)](https://codecov.io/gh/zenstruck/assert)
 
 This library allows dependency-free test assertions. When using a PHPUnit-based test
@@ -66,6 +65,9 @@ Assert::pass();
 ```
 
 ## Try
+
+Attempt to run a callback and return the result. If an exception is thrown while
+running, a *fail* is triggered. If run successfully, a *pass* is triggered.
 
 ```php
 use Zenstruck\Assert;

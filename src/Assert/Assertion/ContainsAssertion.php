@@ -22,11 +22,11 @@ final class ContainsAssertion extends EvaluableAssertion
     public function __construct($needle, $haystack, ?string $message = null, array $context = [])
     {
         if (!\is_scalar($haystack) && !\is_iterable($haystack)) {
-            throw new \InvalidArgumentException(\sprintf('$haystack must be iterable or scalar, "%s" given.', get_debug_type($haystack)));
+            throw new \InvalidArgumentException(\sprintf('$haystack must be iterable or scalar, "%s" given.', \get_debug_type($haystack)));
         }
 
         if (\is_scalar($haystack) && !\is_scalar($needle)) {
-            throw new \InvalidArgumentException(\sprintf('When $haystack is scalar, $needle must also be scalar, "%s" given.', get_debug_type($needle)));
+            throw new \InvalidArgumentException(\sprintf('When $haystack is scalar, $needle must also be scalar, "%s" given.', \get_debug_type($needle)));
         }
 
         $this->needle = $needle;
@@ -38,7 +38,7 @@ final class ContainsAssertion extends EvaluableAssertion
     protected function evaluate(): bool
     {
         if (\is_scalar($this->haystack)) {
-            return str_contains((string) $this->haystack, (string) $this->needle);
+            return \str_contains((string) $this->haystack, (string) $this->needle);
         }
 
         $array = $this->haystack instanceof \Traversable ? \iterator_to_array($this->haystack) : $this->haystack;
