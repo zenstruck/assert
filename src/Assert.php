@@ -91,7 +91,7 @@ final class Assert
     }
 
     /**
-     * Returns the value of $callback and if an exception is thrown, trigger a "fail".
+     * Returns the value of $callback and triggers a "pass". If an exception is thrown, trigger a "fail".
      *
      * @param string|null $message If not passed, use thrown exception message.
      *                             Available context: {exception}, {message}
@@ -101,7 +101,10 @@ final class Assert
     public static function try(callable $callback, ?string $message = null, array $context = [])
     {
         try {
-            return $callback();
+            $returnValue = $callback();
+            self::pass();
+
+            return $returnValue;
         } catch (\Throwable $e) {
             self::run(new AssertionFailed(
                 $message ?? $e->getMessage(),

@@ -204,7 +204,7 @@ final class AssertTest extends TestCase
 
         $value = Assert::try(function() { return 'value'; });
 
-        $this->assertSame(0, $this->handler->successCount());
+        $this->assertSame(1, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
         $this->assertSame('value', $value);
     }
