@@ -204,7 +204,7 @@ final class AssertTest extends TestCase
 
         $value = Assert::try(function() { return 'value'; });
 
-        $this->assertSame(0, $this->handler->successCount());
+        $this->assertSame(1, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
         $this->assertSame('value', $value);
     }
@@ -217,13 +217,24 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        $value1 = Assert::try(function() { throw new \RuntimeException('exception message'); });
-        $value2 = Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message');
-        $value3 = Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message {context} {exception} {message}', ['context' => 'value']);
+        try {
+            Assert::try(function() { throw new \RuntimeException('exception message'); });
+        } catch (AssertionFailed $e) {
+            $this->assertSame('exception message', $e->getMessage());
+        }
 
-        $this->assertNull($value1);
-        $this->assertNull($value2);
-        $this->assertNull($value3);
+        try {
+            Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message');
+        } catch (AssertionFailed $e) {
+            $this->assertSame('override message', $e->getMessage());
+        }
+
+        try {
+            Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message {context} {exception} {message}', ['context' => 'value']);
+        } catch (AssertionFailed $e) {
+            $this->assertSame('override message value RuntimeException exception message', $e->getMessage());
+        }
+
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(3, $this->handler->failureCount());
         $this->assertInstanceOf(\RuntimeException::class, $this->handler->failures()[0]->getPrevious());

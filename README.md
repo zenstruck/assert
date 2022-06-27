@@ -67,6 +67,9 @@ Assert::pass();
 
 ## Try
 
+Attempt to run a callback and return the result. If an exception is thrown while
+running, a *fail* is triggered. If run successfully, a *pass* is triggered.
+
 ```php
 use Zenstruck\Assert;
 
