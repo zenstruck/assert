@@ -48,7 +48,7 @@ final class ThrowsAssertion
         }
 
         if (!\is_string($expectedException)) {
-            throw new \InvalidArgumentException(\sprintf('Expected exception must a string representation of a class or interface, "%s" given.', get_debug_type($expectedException)));
+            throw new \InvalidArgumentException(\sprintf('Expected exception must a string representation of a class or interface, "%s" given.', \get_debug_type($expectedException)));
         }
 
         if (!\class_exists($expectedException) && !\interface_exists($expectedException)) {
@@ -73,7 +73,7 @@ final class ThrowsAssertion
                 );
             }
 
-            if ($this->expectedMessage && !str_contains($actual->getMessage(), $this->expectedMessage)) {
+            if ($this->expectedMessage && !\str_contains($actual->getMessage(), $this->expectedMessage)) {
                 AssertionFailed::throw(
                     'Expected "{actual_exception}" message "{actual_message}" to contain "{expected_message}".',
                     [

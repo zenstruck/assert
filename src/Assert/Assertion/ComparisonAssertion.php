@@ -133,9 +133,9 @@ final class ComparisonAssertion extends EvaluableAssertion
             // show the type difference
             return \sprintf(
                 'Expected "(%s) {actual}" to be %s "(%s) {expected}".',
-                get_debug_type($this->actual),
+                \get_debug_type($this->actual),
                 $this->comparison,
-                get_debug_type($this->expected)
+                \get_debug_type($this->expected)
             );
         }
 

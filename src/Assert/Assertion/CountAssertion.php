@@ -19,8 +19,8 @@ final class CountAssertion extends EvaluableAssertion
      */
     public function __construct(int $expected, $haystack, ?string $message = null, array $context = [])
     {
-        if (!is_countable($haystack) && !\is_iterable($haystack)) {
-            throw new \InvalidArgumentException(\sprintf('$haystack must be countable or iterable, "%s" given.', get_debug_type($haystack)));
+        if (!\is_countable($haystack) && !\is_iterable($haystack)) {
+            throw new \InvalidArgumentException(\sprintf('$haystack must be countable or iterable, "%s" given.', \get_debug_type($haystack)));
         }
 
         $this->expected = $expected;
@@ -55,6 +55,6 @@ final class CountAssertion extends EvaluableAssertion
 
     private function count(): int
     {
-        return is_countable($this->haystack) ? \count($this->haystack) : \iterator_count($this->haystack);
+        return \is_countable($this->haystack) ? \count($this->haystack) : \iterator_count($this->haystack);
     }
 }

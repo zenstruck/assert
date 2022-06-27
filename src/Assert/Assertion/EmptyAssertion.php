@@ -51,7 +51,7 @@ final class EmptyAssertion extends EvaluableAssertion
 
     private function count(): ?int
     {
-        if (is_countable($this->actual)) {
+        if (\is_countable($this->actual)) {
             return \count($this->actual);
         }
 

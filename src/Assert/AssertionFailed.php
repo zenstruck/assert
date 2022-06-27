@@ -68,7 +68,7 @@ final class AssertionFailed extends \RuntimeException
         }
 
         if (!\is_scalar($value)) {
-            return \sprintf('(%s)', get_debug_type($value));
+            return \sprintf('(%s)', \get_debug_type($value));
         }
 
         if (\is_bool($value)) {
