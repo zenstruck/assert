@@ -3,6 +3,7 @@
 namespace Zenstruck\Assert;
 
 use Zenstruck\Assert;
+use Zenstruck\Assert\Assertion\ArraySubsetAssertion;
 use Zenstruck\Assert\Assertion\ComparisonAssertion;
 use Zenstruck\Assert\Assertion\ContainsAssertion;
 use Zenstruck\Assert\Assertion\CountAssertion;
@@ -271,6 +272,50 @@ final class Expectation
     public function isLessThanOrEqualTo($expected, ?string $message = null, array $context = []): self
     {
         Assert::run(ComparisonAssertion::lessThanOrEqual($this->value, $expected, $message, $context));
+
+        return $this;
+    }
+
+    /**
+     * @param string|iterable $haystack
+     * @param string|null     $message  Available context: {needle}, {haystack}
+     */
+    public function isSubsetOf($haystack, ?string $message = null, array $context = []): self
+    {
+        Assert::run(ArraySubsetAssertion::isSubsetOf($this->value, $haystack, $message, $context));
+
+        return $this;
+    }
+
+    /**
+     * @param string|iterable $needle
+     * @param string|null     $message Available context: {needle}, {haystack}
+     */
+    public function hasSubset($needle, ?string $message = null, array $context = []): self
+    {
+        Assert::run(ArraySubsetAssertion::hasSubset($this->value, $needle, $message, $context));
+
+        return $this;
+    }
+
+    /**
+     * @param string|iterable $haystack
+     * @param string|null     $message  Available context: {needle}, {haystack}
+     */
+    public function isNotSubsetOf($haystack, ?string $message = null, array $context = []): self
+    {
+        Assert::not(ArraySubsetAssertion::isSubsetOf($this->value, $haystack, $message, $context));
+
+        return $this;
+    }
+
+    /**
+     * @param string|iterable $needle
+     * @param string|null     $message Available context: {needle}, {haystack}
+     */
+    public function notHasSubset($needle, ?string $message = null, array $context = []): self
+    {
+        Assert::not(ArraySubsetAssertion::hasSubset($this->value, $needle, $message, $context));
 
         return $this;
     }

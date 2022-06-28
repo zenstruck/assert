@@ -477,6 +477,72 @@ final class ExpectationTest extends TestCase
     /**
      * @test
      */
+    public function is_subset_of(): void
+    {
+        $this->assertSuccess(4, static function() {
+            Assert::that(['foo' => 'bar'])->isSubsetOf(['foo' => 'bar', 'bar' => 'foo']);
+            Assert::that('{"foo":"bar"}')->isSubsetOf('{"foo":"bar","bar":"foo"}');
+            Assert::that('{"foo":"bar"}')->isSubsetOf(['foo' => 'bar', 'bar' => 'foo']);
+            Assert::that(['foo' => 'bar'])->isSubsetOf('{"foo":"bar","bar":"foo"}');
+        });
+
+        $this->assertFails(
+            'Expected needle to be a subset of haystack.',
+            static function() {Assert::that(['foo' => 'bar'])->isSubsetOf(['bar' => 'foo']); }
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function has_subset(): void
+    {
+        $this->assertSuccess(2, static function() {
+            Assert::that(['foo' => 'bar', 'bar' => 'foo'])->hasSubset(['foo' => 'bar']);
+            Assert::that('{"foo":"bar","bar":"foo"}')->hasSubset('{"foo":"bar"}');
+        });
+
+        $this->assertFails(
+            'Expected haystack to have needle as subset.',
+            static function() {Assert::that(['foo' => 'bar'])->hasSubset(['bar' => 'foo']); }
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function is_not_subset_of(): void
+    {
+        $this->assertSuccess(2, static function() {
+            Assert::that(['foo' => 'bar'])->isNotSubsetOf(['bar' => 'foo']);
+            Assert::that('{"foo":"bar"}')->isNotSubsetOf('{"bar":"foo"}');
+        });
+
+        $this->assertFails(
+            'Expected needle not to be a subset of haystack.',
+            static function() {Assert::that(['foo' => 'bar'])->isNotSubsetOf(['foo' => 'bar', 'bar' => 'foo']); }
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function not_has_subset(): void
+    {
+        $this->assertSuccess(2, static function() {
+            Assert::that(['foo' => 'bar'])->notHasSubset(['bar' => 'foo']);
+            Assert::that('{"foo":"bar"}')->notHasSubset('{"bar":"foo"}');
+        });
+
+        $this->assertFails(
+            'Expected haystack not to have needle as subset.',
+            static function() {Assert::that(['foo' => 'bar', 'bar' => 'foo'])->notHasSubset(['foo' => 'bar']); }
+        );
+    }
+
+    /**
+     * @test
+     */
     public function throws(): void
     {
         $this->assertSuccess(8, function() {
