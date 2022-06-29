@@ -168,6 +168,11 @@ Assert::that(6)->isNot(6); // fail
 Assert::that('foo')->isNot('bar'); // pass
 Assert::that(6)->isNot('6'); // pass
 
+// instanceof
+Assert::that($object)->isInstanceOf(Some::class);
+
+Assert::that($object)->isNotInstanceOf(Some::class);
+
 // greater than
 Assert::that(2)->isGreaterThan(1); // pass
 Assert::that(2)->isGreaterThan(1); // fail
@@ -187,6 +192,46 @@ Assert::that(3)->isLessThan(3); // fail
 Assert::that(3)->isLessThanOrEqualTo(4); // pass
 Assert::that(3)->isLessThanOrEqualTo(2); // fail
 Assert::that(3)->isLessThanOrEqualTo(3); // pass
+```
+
+### Type Expectations
+
+```php
+use Zenstruck\Assert;
+use Zenstruck\Assert\Type;
+
+Assert::that($something)->is(Type::bool());
+Assert::that($something)->is(Type::int());
+Assert::that($something)->is(Type::float());
+Assert::that($something)->is(Type::numeric());
+Assert::that($something)->is(Type::string());
+Assert::that($something)->is(Type::callable());
+Assert::that($something)->is(Type::iterable());
+Assert::that($something)->is(Type::countable());
+Assert::that($something)->is(Type::object());
+Assert::that($something)->is(Type::resource());
+Assert::that($something)->is(Type::array());
+Assert::that($something)->is(Type::arrayList()); // [1, 2, 3] passes but ['foo' => 'bar'] does not
+Assert::that($something)->is(Type::arrayAssoc()); // ['foo' => 'bar'] passes but [1, 2, 3] does not
+Assert::that($something)->is(Type::arrayEmpty()); // [] passes but [1, 2, 3] does not
+Assert::that($something)->is(Type::json()); // valid json string
+
+// "Not's"
+Assert::that($something)->isNot(Type::bool());
+Assert::that($something)->isNot(Type::int());
+Assert::that($something)->isNot(Type::float());
+Assert::that($something)->isNot(Type::numeric());
+Assert::that($something)->isNot(Type::string());
+Assert::that($something)->isNot(Type::callable());
+Assert::that($something)->isNot(Type::iterable());
+Assert::that($something)->isNot(Type::countable());
+Assert::that($something)->isNot(Type::object());
+Assert::that($something)->isNot(Type::resource());
+Assert::that($something)->isNot(Type::array());
+Assert::that($something)->isNot(Type::arrayList());
+Assert::that($something)->isNot(Type::arrayAssoc());
+Assert::that($something)->isNot(Type::arrayEmpty());
+Assert::that($something)->isNot(Type::json());
 ```
 
 ### Throws Expectation

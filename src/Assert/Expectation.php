@@ -8,6 +8,7 @@ use Zenstruck\Assert\Assertion\ContainsAssertion;
 use Zenstruck\Assert\Assertion\CountAssertion;
 use Zenstruck\Assert\Assertion\EmptyAssertion;
 use Zenstruck\Assert\Assertion\ThrowsAssertion;
+use Zenstruck\Assert\Assertion\TypeAssertion;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -200,11 +201,19 @@ final class Expectation
     /**
      * Asserts the expectation value and $expected are "the same" using "===".
      *
-     * @param mixed       $expected
+     * If a {@see Type} object is passed as expected, asserts the type matches.
+     *
+     * @param mixed|Type  $expected
      * @param string|null $message  Available context: {expected}, {actual}
      */
     public function is($expected, ?string $message = null, array $context = []): self
     {
+        if ($expected instanceof Type) {
+            Assert::run(new TypeAssertion($this->value, $expected, $message, $context));
+
+            return $this;
+        }
+
         Assert::run(ComparisonAssertion::same($this->value, $expected, $message, $context));
 
         return $this;
@@ -213,11 +222,19 @@ final class Expectation
     /**
      * Asserts the expectation value and $expected are NOT "the same" using "!==".
      *
-     * @param mixed       $expected
+     * If a {@see Type} object is passed as expected, asserts the type DOES NOT matche.
+     *
+     * @param mixed|Type  $expected
      * @param string|null $message  Available context: {expected}, {actual}
      */
     public function isNot($expected, ?string $message = null, array $context = []): self
     {
+        if ($expected instanceof Type) {
+            Assert::not(new TypeAssertion($this->value, $expected, $message, $context));
+
+            return $this;
+        }
+
         Assert::not(ComparisonAssertion::same($this->value, $expected, $message, $context));
 
         return $this;
