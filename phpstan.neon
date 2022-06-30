@@ -1,11 +1,7 @@
-includes:
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-
 parameters:
     level: 8
     paths:
         - src
-        - tests
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
     bootstrapFiles:
