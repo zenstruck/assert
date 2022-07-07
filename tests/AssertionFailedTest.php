@@ -39,7 +39,7 @@ final class AssertionFailedTest extends TestCase
             ]
         );
 
-        $this->assertSame(\sprintf('message 1 string 4.3 stdClass (null) (array) %s string with line break (false) (true)', self::SHORT), $exception->getMessage());
+        $this->assertSame(\sprintf('message 1 string 4.3 stdClass (null) (array:list) %s string with line break (false) (true)', self::SHORT), $exception->getMessage());
         $this->assertSame($expected, $exception->context());
     }
 
@@ -50,7 +50,7 @@ final class AssertionFailedTest extends TestCase
     {
         $object = new \stdClass();
         $messageTemplate = 'message {int} {string1} {float} {object} {array} {string2} {string3} {false} {true}';
-        $expectedMessage = \sprintf('message 1 value 4.3 stdClass (array) %s string with line break (false) (true)', self::SHORT);
+        $expectedMessage = \sprintf('message 1 value 4.3 stdClass (array:list) %s string with line break (false) (true)', self::SHORT);
         $expectedContext = [
             'int' => 1,
             'string1' => 'value',
