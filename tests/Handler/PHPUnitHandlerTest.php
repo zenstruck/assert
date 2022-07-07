@@ -68,7 +68,7 @@ final class PHPUnitHandlerTest extends TestCase
                 'object' => $this,
             ]);
         } catch (AssertionFailedError $e) {
-            $this->assertSame(\sprintf('this fails %s (array) %s', AssertionFailedTest::SHORT, __CLASS__), $e->getMessage());
+            $this->assertSame(\sprintf('this fails %s (array:assoc) %s', AssertionFailedTest::SHORT, __CLASS__), $e->getMessage());
 
             return;
         }
@@ -94,7 +94,7 @@ final class PHPUnitHandlerTest extends TestCase
             ]);
         } catch (AssertionFailedError $e) {
             $this->assertStringContainsString(
-                \sprintf("this fails %s (array) %s %s\n\nFailure Context:", AssertionFailedTest::SHORT, __CLASS__, NegatableAssertion::class),
+                \sprintf("this fails %s (array:assoc) %s %s\n\nFailure Context:", AssertionFailedTest::SHORT, __CLASS__, NegatableAssertion::class),
                 $e->getMessage()
             );
             $this->assertStringContainsString(\sprintf("[string]\n'%s'", AssertionFailedTest::LONG), $e->getMessage());

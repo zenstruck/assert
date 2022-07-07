@@ -33,7 +33,7 @@ final class ExpectationTest extends TestCase
         $this
             ->assertFails('Expected "(true)" to be empty.', function() { Assert::that(true)->isEmpty(); })
             ->assertFails('Expected "1" to be empty.', function() { Assert::that(1)->isEmpty(); })
-            ->assertFails('Expected "(array)" to be empty but its count is 1.', function() { Assert::that(['foo'])->isEmpty(); })
+            ->assertFails('Expected "(array:list)" to be empty but its count is 1.', function() { Assert::that(['foo'])->isEmpty(); })
             ->assertFails(
                 \sprintf('Expected "%s" to be empty but its count is 2.', CountableObject::class),
                 function() { Assert::that(new CountableObject(2))->isEmpty(); }
@@ -68,7 +68,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "0" to not be empty.', function() { Assert::that(0)->isNotEmpty(); })
             ->assertFails('Expected "" to not be empty.', function() { Assert::that('')->isNotEmpty(); })
             ->assertFails('Expected "(null)" to not be empty.', function() { Assert::that(null)->isNotEmpty(); })
-            ->assertFails('Expected "(array)" to not be empty.', function() { Assert::that([])->isNotEmpty(); })
+            ->assertFails('Expected "(array:empty)" to not be empty.', function() { Assert::that([])->isNotEmpty(); })
             ->assertFails(
                 \sprintf('Expected "%s" to not be empty.', CountableObject::class),
                 function() { Assert::that(new CountableObject(0))->isNotEmpty(); }
@@ -98,8 +98,8 @@ final class ExpectationTest extends TestCase
         });
 
         $this
-            ->assertFails('Expected the count of (array) to be 1 but got 0.', function() { Assert::that([])->hasCount(1); })
-            ->assertFails('Expected the count of (array) to be 1 but got 2.', function() { Assert::that([1, 2])->hasCount(1); })
+            ->assertFails('Expected the count of (array:empty) to be 1 but got 0.', function() { Assert::that([])->hasCount(1); })
+            ->assertFails('Expected the count of (array:assoc) to be 1 but got 2.', function() { Assert::that(['foo' => 'bar', 'baz' => 'foo'])->hasCount(1); })
             ->assertFails('Expected the count of EmptyIterator to be 1 but got 0.', function() { Assert::that(new \EmptyIterator())->hasCount(1); })
             ->assertFails(
                 \sprintf('Expected the count of %s to be 1 but got 3.', CountableObject::class),
@@ -110,7 +110,7 @@ final class ExpectationTest extends TestCase
                 function() { Assert::that(IterableObject::withCount(2))->hasCount(1); }
             )
             ->assertFails(
-                'fail 1 2 (array) value',
+                'fail 1 2 (array:list) value',
                 function() { Assert::that([1, 2])->hasCount(1, 'fail {expected} {actual} {haystack} {custom}', ['custom' => 'value']); }
             )
         ;
@@ -130,8 +130,8 @@ final class ExpectationTest extends TestCase
         });
 
         $this
-            ->assertFails('Expected the count of (array) to not be 0.', function() { Assert::that([])->doesNotHaveCount(0); })
-            ->assertFails('Expected the count of (array) to not be 2.', function() { Assert::that([1, 2])->doesNotHaveCount(2); })
+            ->assertFails('Expected the count of (array:empty) to not be 0.', function() { Assert::that([])->doesNotHaveCount(0); })
+            ->assertFails('Expected the count of (array:list) to not be 2.', function() { Assert::that([1, 2])->doesNotHaveCount(2); })
             ->assertFails('Expected the count of EmptyIterator to not be 0.', function() { Assert::that(new \EmptyIterator())->doesNotHaveCount(0); })
             ->assertFails(
                 \sprintf('Expected the count of %s to not be 3.', CountableObject::class),
@@ -142,7 +142,7 @@ final class ExpectationTest extends TestCase
                 function() { Assert::that(IterableObject::withCount(2))->doesNotHaveCount(2); }
             )
             ->assertFails(
-                'fail 2 2 (array) value',
+                'fail 2 2 (array:list) value',
                 function() { Assert::that([1, 2])->doesNotHaveCount(2, 'fail {expected} {actual} {haystack} {custom}', ['custom' => 'value']); }
             )
         ;
@@ -164,11 +164,11 @@ final class ExpectationTest extends TestCase
         $this
             ->assertFails('Expected "foobar" to contain "baz".', function() { Assert::that('foobar')->contains('baz'); })
             ->assertFails('Expected "foo" to contain "bar".', function() { Assert::that('foo')->contains('bar'); })
-            ->assertFails('Expected "(array)" to contain "2".', function() { Assert::that([null, 1])->contains(2); })
-            ->assertFails('Expected "(array)" to contain "(array)".', function() { Assert::that([null, ['foo']])->contains(['bar']); })
+            ->assertFails('Expected "(array:list)" to contain "2".', function() { Assert::that([null, 1])->contains(2); })
+            ->assertFails('Expected "(array:list)" to contain "(array:list)".', function() { Assert::that([null, ['foo']])->contains(['bar']); })
             ->assertFails('Expected "EmptyIterator" to contain "foo".', function() { Assert::that(new \EmptyIterator())->contains('foo'); })
             ->assertFails(
-                'fail 3 (array) value',
+                'fail 3 (array:list) value',
                 function() { Assert::that([1, 2])->contains(3, 'fail {needle} {haystack} {custom}', ['custom' => 'value']); }
             )
         ;
@@ -190,10 +190,10 @@ final class ExpectationTest extends TestCase
         $this
             ->assertFails('Expected "foobar" to not contain "bar".', function() { Assert::that('foobar')->doesNotContain('bar'); })
             ->assertFails('Expected "foo" to not contain "foo".', function() { Assert::that('foo')->doesNotContain('foo'); })
-            ->assertFails('Expected "(array)" to not contain "1".', function() { Assert::that([null, 1])->doesNotContain(1); })
-            ->assertFails('Expected "(array)" to not contain "(array)".', function() { Assert::that([null, ['foo']])->doesNotContain(['foo']); })
+            ->assertFails('Expected "(array:list)" to not contain "1".', function() { Assert::that([null, 1])->doesNotContain(1); })
+            ->assertFails('Expected "(array:list)" to not contain "(array:list)".', function() { Assert::that([null, ['foo']])->doesNotContain(['foo']); })
             ->assertFails(
-                'fail 2 (array) value',
+                'fail 2 (array:list) value',
                 function() { Assert::that([1, 2])->doesNotContain(2, 'fail {needle} {haystack} {custom}', ['custom' => 'value']); }
             )
         ;
@@ -217,7 +217,7 @@ final class ExpectationTest extends TestCase
         $this
             ->assertFails('Expected "5" to be equal to "6".', function() { Assert::that(5)->equals(6); })
             ->assertFails('Expected "5" to be equal to "6".', function() { Assert::that(5)->equals('6'); })
-            ->assertFails('Expected "(array)" to be equal to "(array)".', function() { Assert::that(['foo'])->equals(['bar']); })
+            ->assertFails('Expected "(array:list)" to be equal to "(array:list)".', function() { Assert::that(['foo'])->equals(['bar']); })
             ->assertFails(
                 \sprintf('Expected "%1$s" to be equal to "%1$s".', CountableObject::class),
                 function() { Assert::that(new CountableObject(3))->equals(new CountableObject(2)); })
@@ -275,8 +275,8 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "6" to be the same as "(null)".', function() { Assert::that(6)->is(null); })
             ->assertFails('Expected "(string) 5" to be the same as "(int) 5".', function() { Assert::that('5')->is(5); })
             ->assertFails('Expected "foo" to be the same as "bar".', function() { Assert::that('foo')->is('bar'); })
-            ->assertFails('Expected "(array)" to be the same as "(array)".', function() { Assert::that(['foo'])->is(['bar']); })
-            ->assertFails('Expected "foo" to be the same as "(array)".', function() { Assert::that('foo')->is(['foo']); })
+            ->assertFails('Expected "(array:list)" to be the same as "(array:list)".', function() { Assert::that(['foo'])->is(['bar']); })
+            ->assertFails('Expected "foo" to be the same as "(array:list)".', function() { Assert::that('foo')->is(['foo']); })
             ->assertFails('Expected "stdClass" to be the same as "ArrayIterator".', function() { Assert::that(new \stdClass())->is(new \ArrayIterator()); })
             ->assertFails('Expected "stdClass" to be the same as "stdClass".', function() { Assert::that(new \stdClass())->is(new \stdClass()); })
             ->assertFails('fail foo bar value', function() { Assert::that('foo')->is('bar', 'fail {actual} {expected} {custom}', ['custom' => 'value']); })
@@ -300,7 +300,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "5" to not be the same as "5".', function() { Assert::that(5)->isNot(5); })
             ->assertFails('Expected "(null)" to not be the same as "(null)".', function() { Assert::that(null)->isNot(null); })
             ->assertFails('Expected "foo" to not be the same as "foo".', function() { Assert::that('foo')->isNot('foo'); })
-            ->assertFails('Expected "(array)" to not be the same as "(array)".', function() { Assert::that(['foo'])->isNot(['foo']); })
+            ->assertFails('Expected "(array:list)" to not be the same as "(array:list)".', function() { Assert::that(['foo'])->isNot(['foo']); })
             ->assertFails('Expected "stdClass" to not be the same as "stdClass".', function() { Assert::that($o = new \stdClass())->isNot($o); })
             ->assertFails('fail foo foo value', function() { Assert::that('foo')->isNot('foo', 'fail {expected} {actual} {custom}', ['custom' => 'value']); })
         ;

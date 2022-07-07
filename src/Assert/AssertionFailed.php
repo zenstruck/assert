@@ -67,6 +67,14 @@ final class AssertionFailed extends \RuntimeException
             return \get_class($value);
         }
 
+        if (\is_array($value) && !$value) {
+            return '(array:empty)';
+        }
+
+        if (\is_array($value)) { // @phpstan-ignore-line
+            return array_is_list($value) ? '(array:list)' : '(array:assoc)';
+        }
+
         if (!\is_scalar($value)) {
             return \sprintf('(%s)', \get_debug_type($value));
         }
