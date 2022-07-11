@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
 use Zenstruck\Assert\Tests\Fixture\CountableObject;
 use Zenstruck\Assert\Tests\Fixture\IterableObject;
+use Zenstruck\Assert\Type;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -619,6 +620,120 @@ final class ExpectationTest extends TestCase
                 ->contains('bar')
             ;
         });
+    }
+
+    /**
+     * @test
+     * @dataProvider isTypePassProvider
+     *
+     * @param mixed $value
+     */
+    public function is_type_success($value, Type $type): void
+    {
+        $this->assertSuccess(1, function() use ($value, $type) {
+            Assert::that($value)->is($type);
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider isTypeFailProvider
+     *
+     * @param mixed $value
+     */
+    public function is_type_failure($value, Type $type, ?string $normalizedValue = null): void
+    {
+        $this->assertFails(
+            \sprintf('Expected "%s" to be of type %s but is %s.', $normalizedValue ?? $value, $type, \get_debug_type($value)),
+            function() use ($value, $type) {
+                Assert::that($value)->is($type);
+            }
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider isTypeFailProvider
+     *
+     * @param mixed $value
+     */
+    public function is_not_type_success($value, Type $type): void
+    {
+        $this->assertSuccess(1, function() use ($value, $type) {
+            Assert::that($value)->isNot($type);
+        });
+    }
+
+    /**
+     * @test
+     * @dataProvider isTypePassProvider
+     *
+     * @param mixed $value
+     */
+    public function is_not_type_failure($value, Type $type, ?string $normalizedValue = null): void
+    {
+        $this->assertFails(
+            \sprintf('Expected "%s" to NOT be of type %s.', $normalizedValue ?? $value, $type),
+            function() use ($value, $type) {
+                Assert::that($value)->isNot($type);
+            }
+        );
+    }
+
+    public static function isTypePassProvider(): iterable
+    {
+        yield [false, Type::bool(), '(false)'];
+        yield [5, Type::int()];
+        yield [5.0, Type::float()];
+        yield ['5', Type::string()];
+        yield [5, Type::numeric()];
+        yield [5.0, Type::numeric()];
+        yield ['5', Type::numeric()];
+        yield [function() {}, Type::callable(), 'Closure'];
+        yield [\fopen(__DIR__, 'r'), Type::resource(), '(resource (stream))'];
+        yield [[], Type::iterable(), '(array:empty)'];
+        yield [[], Type::countable(), '(array:empty)'];
+        yield [new \ArrayIterator([]), Type::countable(), 'ArrayIterator'];
+        yield [new \ArrayIterator([]), Type::iterable(), 'ArrayIterator'];
+        yield [new \ArrayIterator([]), Type::object(), 'ArrayIterator'];
+        yield [[], Type::array(), '(array:empty)'];
+        yield [['foo'], Type::array(), '(array:list)'];
+        yield [['foo' => 'bar'], Type::array(), '(array:assoc)'];
+        yield [['foo'], Type::arrayList(), '(array:list)'];
+        yield [['foo' => 'bar'], Type::arrayAssoc(), '(array:assoc)'];
+        yield [[], Type::arrayEmpty(), '(array:empty)'];
+        yield ['{"foo": 5}', Type::json()];
+        yield ['[]', Type::json()];
+        yield ['null', Type::json()];
+        yield ['false', Type::json()];
+        yield ['"foo"', Type::json()];
+    }
+
+    public static function isTypeFailProvider(): iterable
+    {
+        yield ['5', Type::int()];
+        yield [5, Type::string()];
+        yield [5, Type::bool()];
+        yield [false, Type::numeric(), '(false)'];
+        yield [6, Type::float()];
+        yield [6, Type::callable()];
+        yield [5, Type::resource()];
+        yield [1, Type::iterable()];
+        yield [1, Type::countable()];
+        yield [new \IteratorIterator(new \ArrayIterator()), Type::countable(), 'IteratorIterator'];
+        yield [1, Type::object()];
+        yield [1, Type::array()];
+        yield [1, Type::arrayList()];
+        yield [1, Type::arrayAssoc()];
+        yield [['foo' => 'bar'], Type::arrayList(), '(array:assoc)'];
+        yield [['foo'], Type::arrayAssoc(), '(array:list)'];
+        yield [[], Type::arrayList(), '(array:empty)'];
+        yield [[], Type::arrayAssoc(), '(array:empty)'];
+        yield [['foo'], Type::arrayEmpty(), '(array:list)'];
+        yield [1, Type::arrayEmpty()];
+        yield [[], Type::json(), '(array:empty)'];
+        yield [new \stdClass(), Type::json(), 'stdClass'];
+        yield ['foo', Type::json()];
     }
 
     private function assertSuccess(int $expectedCount, callable $what): self
