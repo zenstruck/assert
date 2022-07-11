@@ -148,6 +148,18 @@ Assert::that(new \ArrayIterator(['bar']))->doesNotContain('foo'); // pass
 Assert::that('foobar')->doesNotContain('bar'); // fail
 Assert::that(['foo', 'bar'])->doesNotContain('bar'); // fail
 
+// array subsets
+Assert::that(['foo' => 'bar'])->isSubsetOf(['foo' => 'bar', 'bar' => 'foo']); // pass
+Assert::that(['foo' => 'bar'])->isSubsetOf(['bar' => 'foo']); // fail
+
+Assert::that(['foo' => 'bar', 'bar' => 'foo'])->hasSubset(['foo' => 'bar']); // pass
+Assert::that(['foo' => 'bar'])->hasSubset(['bar' => 'foo']); // fail
+
+// /!\ :warning: This feature only works with *associative arrays*.
+// "List" arrays must be provided fully, otherwise the feature won't work: 
+Assert::that([1,3])->isSubsetOf([1,2,3]); // fails
+Assert::that(['foo' => [1,2,3]])->isSubsetOf(['foo' => [1,2,3], 'bar' => 'foo']); // pass
+
 // equals (== comparison) 
 Assert::that('foo')->equals('foo'); // pass
 Assert::that('6')->equals(6); // pass
