@@ -30,12 +30,35 @@ class ArraySubsetAssertionTest extends TestCase
         yield 'empty contains empty' => [[], []];
         yield 'any array contains empty array' => [[], ['foo' => 'bar', 'bar' => 'foo']];
         yield 'simple match' => [['foo' => 'bar'], ['foo' => 'bar', 'bar' => 'foo']];
-        yield 'even unordered keys is a subset' => [['bar' => 'foo', 'foo' => 'bar'], ['foo' => 'bar', 'bar' => 'foo']];
-        yield 'subset can be a list' => [[1, 2], [1, 2, 3]];
-        yield 'subset can be a deep list' => [[['foo' => 0], ['bar' => 1]], [['foo' => 0, 'bar' => 0], ['foo' => 1, 'bar' => 1], ['foo' => 2, 'bar' => 2]]];
+        yield 'unordered keys is a subset' => [['bar' => 'foo', 'foo' => 'bar'], ['foo' => 'bar', 'bar' => 'foo']];
+        yield 'subset as a list' => [[1, 2], [1, 2, 3]];
+        yield 'subset as a list: order does not matter' => [[3, 1], [1, 2, 3]];
+        yield 'subset as a list: with associative arrays' => [
+            [['foo' => 0], ['bar' => 2]],
+            [['foo' => 0, 'bar' => 0], ['foo' => 1, 'bar' => 1], ['foo' => 2, 'bar' => 2]],
+        ];
+        yield 'subset as a list: deep lists unordered' => [
+            [['c', 'b'], 4, 1],
+            [1, ['a', 'b', 'c'], 3, 4],
+        ];
         yield 'deep match' => [
-            ['foo' => ['foo2' => ['foo3' => 'bar', 'list' => [1]]]],
+            ['foo' => ['foo2' => ['foo3' => 'bar', 'list' => [2]]]],
             ['foo' => ['foo2' => ['foo3' => 'bar', 'bar' => 'bar', 'list' => [1, 2, 3]], 'bar' => 'bar'], 'bar' => 'foo'],
+        ];
+        yield 'deep match with lists' => [
+            [
+                'users' => [
+                    ['name' => 'name1', 'age' => 25, 'friends' => ['name3']],
+                    ['name' => 'name3'],
+                ],
+            ],
+            [
+                'users' => [
+                    ['name' => 'name1', 'age' => 25, 'friends' => ['name2', 'name3']],
+                    ['name' => 'name2', 'age' => 26],
+                    ['name' => 'name3', 'age' => 27, 'friends' => ['name1', 'name2']],
+                ],
+            ],
         ];
         yield 'works with ArrayObject' => [
             new \ArrayObject(['foo' => 'bar']),
@@ -65,7 +88,44 @@ class ArraySubsetAssertionTest extends TestCase
         yield 'different key does not match' => [['not foo' => 'bar'], ['foo' => 'bar']];
         yield 'different value does not match' => [['foo' => 'not bar'], ['foo' => 'bar']];
         yield 'match is strict' => [['foo' => '0'], ['foo' => 0]];
-        yield 'order in list is important' => [[3, 2, 1], [1, 2, 3]];
+
+        $deepArrayWithLists = [
+            'users' => [
+                ['name' => 'name1', 'age' => 25, 'friends' => ['name2', 'name3']],
+                ['name' => 'name2', 'age' => 26],
+                ['name' => 'name3', 'age' => 27],
+            ],
+        ];
+
+        yield 'assoc array in list: value fails' => [
+            ['users' => [['name' => 'foo']]],
+            $deepArrayWithLists,
+        ];
+
+        yield 'assoc array in list: key fails' => [
+            ['users' => [['foo' => 'name1']]],
+            $deepArrayWithLists,
+        ];
+
+        yield 'assoc array in list: second key fails' => [
+            ['users' => [['name' => 'name1', 'foo' => 'bar']]],
+            $deepArrayWithLists,
+        ];
+
+        yield 'assoc array in list: second value fails' => [
+            ['users' => [['name' => 'name1', 'age' => 0]]],
+            $deepArrayWithLists,
+        ];
+
+        yield 'assoc array in list: nested list invalid' => [
+            ['users' => [['name' => 'name1', 'age' => 25, 'friends' => ['name1']]]],
+            $deepArrayWithLists,
+        ];
+
+        yield 'assoc array in list: expected nested list is a scalar' => [
+            ['users' => [['name' => 'name1', 'age' => 25, 'friends' => 'name1']]],
+            $deepArrayWithLists,
+        ];
     }
 
     /** @test */
