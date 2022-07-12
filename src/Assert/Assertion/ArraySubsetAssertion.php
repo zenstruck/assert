@@ -56,7 +56,7 @@ final class ArraySubsetAssertion extends EvaluableAssertion
 
     protected function evaluate(): bool
     {
-        return $this->haystack === \array_replace_recursive($this->haystack, $this->needle);
+        return $this->doEvaluate($this->needle, $this->haystack);
     }
 
     protected function defaultFailureMessage(): string
@@ -78,7 +78,71 @@ final class ArraySubsetAssertion extends EvaluableAssertion
         return [
             'needle' => $this->needle,
             'haystack' => $this->haystack,
+            'mode' => $this->mode,
         ];
+    }
+
+    private function doEvaluate(array $needle, array $haystack): bool
+    {
+        // empty needle is always a subset of any haystack
+        if ([] === $needle) {
+            return true;
+        }
+
+        // empty haystack cannot have any subset except empty array
+        if ([] === $haystack) {
+            return false;
+        }
+
+        return array_is_list($needle)
+            ? $this->doEvaluateArrayList($needle, $haystack)
+            : $this->doEvaluateArrayAssoc($needle, $haystack);
+    }
+
+    private function doEvaluateArrayList(array $needle, array $haystack): bool
+    {
+        foreach ($needle as $needleValue) {
+            if (\is_array($needleValue)) {
+                $isValueInHaystack = false;
+                foreach ($haystack as $haystackValue) {
+                    if (!\is_array($haystackValue)) {
+                        continue;
+                    }
+
+                    if ($this->doEvaluate($needleValue, $haystackValue)) {
+                        $isValueInHaystack = true;
+                        break;
+                    }
+                }
+
+                if (false === $isValueInHaystack) {
+                    return false;
+                }
+            } elseif (!\in_array($needleValue, $haystack, true)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function doEvaluateArrayAssoc(array $needle, array $haystack): bool
+    {
+        foreach ($needle as $key => $value) {
+            if (!\array_key_exists($key, $haystack)) {
+                return false;
+            }
+
+            if (\is_array($value) && \is_array($haystack[$key])) {
+                if (!$this->doEvaluate($value, $haystack[$key])) {
+                    return false;
+                }
+            } elseif ($value !== $haystack[$key]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -155,10 +155,23 @@ Assert::that(['foo' => 'bar'])->isSubsetOf(['bar' => 'foo']); // fail
 Assert::that(['foo' => 'bar', 'bar' => 'foo'])->hasSubset(['foo' => 'bar']); // pass
 Assert::that(['foo' => 'bar'])->hasSubset(['bar' => 'foo']); // fail
 
-// /!\ :warning: This feature only works with *associative arrays*.
-// "List" arrays must be provided fully, otherwise the feature won't work: 
-Assert::that([1,3])->isSubsetOf([1,2,3]); // fails
-Assert::that(['foo' => [1,2,3]])->isSubsetOf(['foo' => [1,2,3], 'bar' => 'foo']); // pass
+// array subset assertions can also be performed on non-associated arrays (lists/sets).
+// Keep in mind that order does not matter.
+Assert::that([
+    'users' => [
+        ['name' => 'user3', 'age' => 20],
+        ['name' => 'user1'],
+    ]
+])->isSubsetOf([
+    'users' => [
+        ['name' => 'user1', 'age' => 25],
+        ['name' => 'user2', 'age' => 23],
+        ['name' => 'user3', 'age' => 20],
+    ]
+]); // pass
+
+// also works with json strings that decode to arrays
+Assert::that('[3, 1]')->isSubsetOf('[1, 2, 3]'); // pass
 
 // equals (== comparison) 
 Assert::that('foo')->equals('foo'); // pass
