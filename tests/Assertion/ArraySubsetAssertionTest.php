@@ -13,7 +13,6 @@ class ArraySubsetAssertionTest extends TestCase
 {
     /**
      * @dataProvider arraySubsetProvider
-     *
      * @test
      *
      * @param string|iterable $needle
@@ -73,7 +72,6 @@ class ArraySubsetAssertionTest extends TestCase
 
     /**
      * @dataProvider arrayNotSubsetProvider
-     *
      * @test
      */
     public function it_asserts_not_array_subset(array $needle, array $haystack): void

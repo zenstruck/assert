@@ -43,6 +43,15 @@ return (new PhpCsFixer\Config())
 
         // temporary fix for union types (ref: https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/5495)
         'binary_operator_spaces' => ['operators' => ['|' => null]],
+        'phpdoc_separation' => ['groups' => [
+            ['test', 'dataProvider'],
+            ['template', 'implements', 'extends'],
+            ['phpstan-type', 'phpstan-import-type'],
+            ['deprecated', 'link', 'see', 'since'],
+            ['author', 'copyright', 'license', 'source'],
+            ['category', 'package', 'subpackage'],
+            ['property', 'property-read', 'property-write'],
+        ]],
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

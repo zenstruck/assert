@@ -71,7 +71,7 @@ final class AssertionFailed extends \RuntimeException
             return '(array:empty)';
         }
 
-        if (\is_array($value)) { // @phpstan-ignore-line
+        if (\is_array($value)) {
             return array_is_list($value) ? '(array:list)' : '(array:assoc)';
         }
 
