@@ -4,16 +4,3 @@ parameters:
         - src
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
-    bootstrapFiles:
-        - vendor/bin/.phpunit/phpunit/vendor/autoload.php
-    ignoreErrors:
-        # The following are type-check tests
-        - message: "#^Parameter \\#2 \\$haystack of class Zenstruck\\\\Assert\\\\Assertion\\\\ContainsAssertion constructor expects bool\\|float\\|int\\|iterable\\|string, stdClass given\\.$#"
-          count: 1
-          path: tests/Assertion/ContainsAssertionTest.php
-        - message: "#^Parameter \\#2 \\$haystack of class Zenstruck\\\\Assert\\\\Assertion\\\\CountAssertion constructor expects Countable\\|iterable, int given\\.$#"
-          count: 1
-          path: tests/Assertion/CountAssertionTest.php
-        - message: "#^Parameter \\#2 \\$expectedException of class Zenstruck\\\\Assert\\\\Assertion\\\\ThrowsAssertion constructor expects \\(callable\\(\\)\\: mixed\\)\\|string, array\\{\\} given\\.$#"
-          count: 1
-          path: tests/Assertion/ThrowsAssertionTest.php
