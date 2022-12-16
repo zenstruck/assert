@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/assert package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\Assert\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -23,7 +32,7 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->failureCount());
 
         Assert::run(function() {});
-        Assert::run(function() { return 'value'; });
+        Assert::run(fn() => 'value');
 
         $this->assertSame(2, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
@@ -202,7 +211,7 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        $value = Assert::try(function() { return 'value'; });
+        $value = Assert::try(fn() => 'value');
 
         $this->assertSame(1, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());

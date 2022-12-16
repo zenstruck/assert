@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/assert package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\Assert;
 
 /**
@@ -64,7 +73,7 @@ final class AssertionFailed extends \RuntimeException
     private static function normalizeContextValue($value): string
     {
         if (\is_object($value)) {
-            return \get_class($value);
+            return $value::class;
         }
 
         if (\is_array($value) && !$value) {
