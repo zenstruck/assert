@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [v1.3.0](https://github.com/zenstruck/assert/releases/tag/v1.3.0)
+
+January 23rd, 2023 - [v1.2.0...v1.3.0](https://github.com/zenstruck/assert/compare/v1.2.0...v1.3.0)
+
+* 11efb09 minor: add output to ArraySubset failures (#22) by @nikophil
+* b346d0c fix(ci): add token by @kbond
+* bdd44e4 chore(ci): fix by @kbond
+* 58ee470 feat: require PHP 8+ (#21) by @kbond
+* a8e830a ci: fix (#20) by @kbond
+
 ## [v1.2.0](https://github.com/zenstruck/assert/releases/tag/v1.2.0)
 
 July 12th, 2022 - [v1.1.0...v1.2.0](https://github.com/zenstruck/assert/compare/v1.1.0...v1.2.0)
