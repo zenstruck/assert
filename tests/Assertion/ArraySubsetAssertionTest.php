@@ -16,6 +16,7 @@ namespace Zenstruck\Assert\Tests\Assertion;
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
 use Zenstruck\Assert\Assertion\ArraySubsetAssertion;
+use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Tests\Fixture\IterableObject;
 
 class ArraySubsetAssertionTest extends TestCase
@@ -95,6 +96,7 @@ class ArraySubsetAssertionTest extends TestCase
         yield 'different key does not match' => [['not foo' => 'bar'], ['foo' => 'bar']];
         yield 'different value does not match' => [['foo' => 'not bar'], ['foo' => 'bar']];
         yield 'match is strict' => [['foo' => '0'], ['foo' => 0]];
+        yield 'assoc array match list value' => [['foo', 'bar', 'baz'], ['a' => 'foo', 'b' => 'bar', 'c' => 'baz']];
 
         $deepArrayWithLists = [
             'users' => [
@@ -135,7 +137,9 @@ class ArraySubsetAssertionTest extends TestCase
         ];
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_throws_if_given_needle_is_not_valid_json(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -144,12 +148,67 @@ class ArraySubsetAssertionTest extends TestCase
         ArraySubsetAssertion::isSubsetOf('invalid json', []);
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_throws_if_given_haystack_is_not_valid_json(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Given string as haystack is not a valid json list/object.');
 
         ArraySubsetAssertion::isSubsetOf([], 'invalid json');
+    }
+
+    /**
+     * @test
+     * @dataProvider checkDiffOnFailureProvider
+     *
+     * @param string|iterable $needle
+     * @param string|iterable $haystack
+     */
+    public function it_displays_the_right_array_diff_on_failure($needle, $haystack, string $expectedMessage): void
+    {
+        try {
+            ArraySubsetAssertion::isSubsetOf($needle, $haystack)();
+        } catch (AssertionFailed $e) {
+        }
+
+        Assert::that($e ?? null)->isNotNull();
+        Assert::that($e->getMessage())->contains($expectedMessage);
+    }
+
+    public function checkDiffOnFailureProvider(): iterable
+    {
+        yield 'comparison between arrays' => [
+            ['foo' => 'bar'],
+            [],
+            <<<FAILURE
+            Expected needle to be a subset of haystack.
+            Expected:
+            [
+                'foo' => 'bar',
+            ]
+
+            Actual:
+            []
+            FAILURE
+        ];
+
+        yield 'comparison between jsons' => [
+            '{"foo":"bar"}',
+            '{"bar":"foo"}',
+            <<<FAILURE
+            Expected needle to be a subset of haystack.
+            Expected:
+            {
+                "foo": "bar"
+            }
+
+            Actual:
+            {
+                "bar": "foo"
+            }
+            FAILURE
+        ];
     }
 }
