@@ -772,7 +772,7 @@ final class ExpectationTest extends TestCase
         $what();
 
         $this->assertSame(1, $this->handler->failureCount(), 'Did not fail.');
-        $this->assertSame($expectedMessage, $this->handler->lastFailureMessage());
+        $this->assertStringContainsString($expectedMessage, $this->handler->lastFailureMessage());
 
         return $this;
     }

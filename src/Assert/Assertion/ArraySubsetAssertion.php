@@ -11,6 +11,10 @@
 
 namespace Zenstruck\Assert\Assertion;
 
+use SebastianBergmann\Comparator\ComparisonFailure;
+use SebastianBergmann\Exporter\Exporter;
+use Symfony\Component\VarExporter\VarExporter;
+
 /**
  * @author Nicolas PHILIPPE <nikophil@gmail.com>
  */
@@ -31,13 +35,20 @@ final class ArraySubsetAssertion extends EvaluableAssertion
     /** @var string */
     private $mode;
 
+    /** @var bool */
+    private $needleWasJson = false;
+
     /**
      * @param string|iterable $needle
      * @param string|iterable $haystack
-     * @param string|null     $message  Available context: {needle}, {haystack}
+     * @param string|null $message Available context: {needle}, {haystack}
      */
     private function __construct($needle, $haystack, string $mode, ?string $message = null, array $context = [])
     {
+        if (is_string($needle)) {
+            $this->needleWasJson = true;
+        }
+
         $this->needle = $this->toArray($needle, self::PARAM_TYPE_NEEDLE);
         $this->haystack = $this->toArray($haystack, self::PARAM_TYPE_HAYSTACK);
         $this->mode = $mode;
@@ -70,9 +81,23 @@ final class ArraySubsetAssertion extends EvaluableAssertion
 
     protected function defaultFailureMessage(): string
     {
-        return self::MODE_IS_SUBSET === $this->mode
-            ? 'Expected needle to be a subset of haystack.'
-            : 'Expected haystack to have needle as subset.';
+        [$expected, $actual, $message] = match ($this->mode) {
+            self::MODE_IS_SUBSET => [$this->needle, $this->haystack, 'Expected needle to be a subset of haystack.'],
+            self::MODE_HAS_SUBSET => [$this->haystack, $this->needle, 'Expected haystack to have needle as subset.'],
+            default => throw new \LogicException("Mode {$this->mode} does not exist.")
+        };
+
+        $expected = $this->needleWasJson ? json_encode($expected, \JSON_PRETTY_PRINT) : VarExporter::export($expected);
+        $actual = $this->needleWasJson ? json_encode($actual, \JSON_PRETTY_PRINT) : VarExporter::export($actual);
+
+        return <<<MESSAGE
+        $message
+        Expected:
+        $expected
+
+        Actual:
+        $actual
+        MESSAGE;
     }
 
     protected function defaultNotFailureMessage(): string
@@ -110,6 +135,10 @@ final class ArraySubsetAssertion extends EvaluableAssertion
 
     private function doEvaluateArrayList(array $needle, array $haystack): bool
     {
+        if (!array_is_list($haystack)) {
+            return false;
+        }
+
         foreach ($needle as $needleValue) {
             if (\is_array($needleValue)) {
                 $isValueInHaystack = false;
