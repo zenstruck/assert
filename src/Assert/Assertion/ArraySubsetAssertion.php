@@ -11,8 +11,6 @@
 
 namespace Zenstruck\Assert\Assertion;
 
-use SebastianBergmann\Comparator\ComparisonFailure;
-use SebastianBergmann\Exporter\Exporter;
 use Symfony\Component\VarExporter\VarExporter;
 
 /**
@@ -41,11 +39,11 @@ final class ArraySubsetAssertion extends EvaluableAssertion
     /**
      * @param string|iterable $needle
      * @param string|iterable $haystack
-     * @param string|null $message Available context: {needle}, {haystack}
+     * @param string|null     $message  Available context: {needle}, {haystack}
      */
     private function __construct($needle, $haystack, string $mode, ?string $message = null, array $context = [])
     {
-        if (is_string($needle)) {
+        if (\is_string($needle)) {
             $this->needleWasJson = true;
         }
 
@@ -87,17 +85,17 @@ final class ArraySubsetAssertion extends EvaluableAssertion
             default => throw new \LogicException("Mode {$this->mode} does not exist.")
         };
 
-        $expected = $this->needleWasJson ? json_encode($expected, \JSON_PRETTY_PRINT) : VarExporter::export($expected);
-        $actual = $this->needleWasJson ? json_encode($actual, \JSON_PRETTY_PRINT) : VarExporter::export($actual);
+        $expected = $this->needleWasJson ? \json_encode($expected, \JSON_PRETTY_PRINT) : VarExporter::export($expected);
+        $actual = $this->needleWasJson ? \json_encode($actual, \JSON_PRETTY_PRINT) : VarExporter::export($actual);
 
         return <<<MESSAGE
-        $message
-        Expected:
-        $expected
+            {$message}
+            Expected:
+            {$expected}
 
-        Actual:
-        $actual
-        MESSAGE;
+            Actual:
+            {$actual}
+            MESSAGE;
     }
 
     protected function defaultNotFailureMessage(): string

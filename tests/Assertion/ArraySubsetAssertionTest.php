@@ -183,32 +183,32 @@ class ArraySubsetAssertionTest extends TestCase
             ['foo' => 'bar'],
             [],
             <<<FAILURE
-            Expected needle to be a subset of haystack.
-            Expected:
-            [
-                'foo' => 'bar',
-            ]
+                Expected needle to be a subset of haystack.
+                Expected:
+                [
+                    'foo' => 'bar',
+                ]
 
-            Actual:
-            []
-            FAILURE
+                Actual:
+                []
+                FAILURE,
         ];
 
         yield 'comparison between jsons' => [
             '{"foo":"bar"}',
             '{"bar":"foo"}',
             <<<FAILURE
-            Expected needle to be a subset of haystack.
-            Expected:
-            {
-                "foo": "bar"
-            }
+                Expected needle to be a subset of haystack.
+                Expected:
+                {
+                    "foo": "bar"
+                }
 
-            Actual:
-            {
-                "bar": "foo"
-            }
-            FAILURE
+                Actual:
+                {
+                    "bar": "foo"
+                }
+                FAILURE,
         ];
     }
 }
