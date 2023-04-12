@@ -199,6 +199,16 @@ Assert::that(false)->isTrue(); // fail
 Assert::that(true)->isFalse(); // fail
 Assert::that(false)->isFalse(); // pass
 
+// boolean (==)
+Assert::that(1)->isTruthy(); // pass
+Assert::that(new \stdClass())->isTruthy(); // pass
+Assert::that('text')->isTruthy(); // pass
+Assert::that(null)->isTruthy(); // fail
+Assert::that(0)->isFalsy(); // pass
+Assert::that(null)->isFalsy(); // pass
+Assert::that('')->isFalsy(); // pass
+Assert::that(1)->isFalsy(); // fail
+
 // instanceof
 Assert::that($object)->isInstanceOf(Some::class);
 

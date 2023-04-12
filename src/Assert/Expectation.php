@@ -229,6 +229,26 @@ final class Expectation
     }
 
     /**
+     * Asserts the expectation value == true.
+     *
+     * @param string $message Available context: {expected}, {actual}
+     */
+    public function isTruthy(string $message = 'Expected "{actual}" to be "truthy".', array $context = []): self
+    {
+        return $this->equals(true, $message, $context);
+    }
+
+    /**
+     * Asserts the expectation value == false.
+     *
+     * @param string $message Available context: {expected}, {actual}
+     */
+    public function isFalsy(string $message = 'Expected "{actual}" to be "falsy".', array $context = []): self
+    {
+        return $this->equals(false, $message, $context);
+    }
+
+    /**
      * Asserts the expectation value and $expected are "the same" using "===".
      *
      * If a {@see Type} object is passed as expected, asserts the type matches.

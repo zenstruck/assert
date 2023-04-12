@@ -240,6 +240,50 @@ final class ExpectationTest extends TestCase
     /**
      * @test
      */
+    public function is_truthy(): void
+    {
+        $this->assertSuccess(6, function() {
+            Assert::that(true)->isTruthy();
+            Assert::that(1)->isTruthy();
+            Assert::that(100)->isTruthy();
+            Assert::that(' ')->isTruthy();
+            Assert::that('foo')->isTruthy();
+            Assert::that(new \stdClass())->isTruthy();
+        });
+
+        $this
+            ->assertFails('Expected "(false)" to be "truthy".', function() { Assert::that(false)->isTruthy(); })
+            ->assertFails('Expected "(null)" to be "truthy".', function() { Assert::that(null)->isTruthy(); })
+            ->assertFails('Expected "0" to be "truthy".', function() { Assert::that(0)->isTruthy(); })
+            ->assertFails('Expected "" to be "truthy".', function() { Assert::that('')->isTruthy(); })
+            ->assertFails('Expected "0" to be "truthy".', function() { Assert::that('0')->isTruthy(); })
+        ;
+    }
+
+    /**
+     * @test
+     */
+    public function is_falsy(): void
+    {
+        $this->assertSuccess(5, function() {
+            Assert::that(false)->isFalsy();
+            Assert::that(null)->isFalsy();
+            Assert::that(0)->isFalsy();
+            Assert::that('0')->isFalsy();
+            Assert::that('')->isFalsy();
+        });
+
+        $this
+            ->assertFails('Expected "(true)" to be "falsy".', function() { Assert::that(true)->isFalsy(); })
+            ->assertFails('Expected " " to be "falsy".', function() { Assert::that(' ')->isFalsy(); })
+            ->assertFails('Expected "1" to be "falsy".', function() { Assert::that(1)->isFalsy(); })
+            ->assertFails('Expected "stdClass" to be "falsy".', function() { Assert::that(new \stdClass())->isFalsy(); })
+        ;
+    }
+
+    /**
+     * @test
+     */
     public function equals(): void
     {
         $this->assertSuccess(7, function() {
