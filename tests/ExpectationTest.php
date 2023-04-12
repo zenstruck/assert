@@ -212,6 +212,34 @@ final class ExpectationTest extends TestCase
     /**
      * @test
      */
+    public function is_true(): void
+    {
+        $this->assertSuccess(1, function() {
+            Assert::that(true)->isTrue();
+        });
+
+        $this
+            ->assertFails('Expected (false) to be (true).', function() { Assert::that(false)->isTrue(); })
+        ;
+    }
+
+    /**
+     * @test
+     */
+    public function is_false(): void
+    {
+        $this->assertSuccess(1, function() {
+            Assert::that(false)->isFalse();
+        });
+
+        $this
+            ->assertFails('Expected (true) to be (false).', function() { Assert::that(true)->isFalse(); })
+        ;
+    }
+
+    /**
+     * @test
+     */
     public function equals(): void
     {
         $this->assertSuccess(7, function() {

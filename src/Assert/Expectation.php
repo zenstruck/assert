@@ -209,6 +209,26 @@ final class Expectation
     }
 
     /**
+     * Asserts the expectation value === true.
+     */
+    public function isTrue(string $message = 'Expected (false) to be (true).', array $context = []): self
+    {
+        Assert::true($this->value, $message, $context);
+
+        return $this;
+    }
+
+    /**
+     * Asserts the expectation value === false.
+     */
+    public function isFalse(string $message = 'Expected (true) to be (false).', array $context = []): self
+    {
+        Assert::false($this->value, $message, $context);
+
+        return $this;
+    }
+
+    /**
      * Asserts the expectation value and $expected are "the same" using "===".
      *
      * If a {@see Type} object is passed as expected, asserts the type matches.
