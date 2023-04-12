@@ -174,6 +174,7 @@ final class ExpectationTest extends TestCase
         $this
             ->assertFails('Expected "foobar" to contain "baz".', function() { Assert::that('foobar')->contains('baz'); })
             ->assertFails('Expected "foo" to contain "bar".', function() { Assert::that('foo')->contains('bar'); })
+            ->assertFails('Expected "" to contain "bar".', function() { Assert::that(null)->contains('bar'); })
             ->assertFails('Expected "(array:list)" to contain "2".', function() { Assert::that([null, 1])->contains(2); })
             ->assertFails('Expected "(array:list)" to contain "(array:list)".', function() { Assert::that([null, ['foo']])->contains(['bar']); })
             ->assertFails('Expected "EmptyIterator" to contain "foo".', function() { Assert::that(new \EmptyIterator())->contains('foo'); })
@@ -189,9 +190,10 @@ final class ExpectationTest extends TestCase
      */
     public function does_not_contain(): void
     {
-        $this->assertSuccess(5, function() {
+        $this->assertSuccess(6, function() {
             Assert::that('foobar')->doesNotContain('baz');
             Assert::that('foo')->doesNotContain('bar');
+            Assert::that(null)->doesNotContain('bar');
             Assert::that([null, 1])->doesNotContain(2);
             Assert::that([null, ['foo']])->doesNotContain(['bar']);
             Assert::that(new IterableObject(['foo', 'bar']))->doesNotContain('baz');
