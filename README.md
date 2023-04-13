@@ -173,7 +173,7 @@ Assert::that([
 // also works with json strings that decode to arrays
 Assert::that('[3, 1]')->isSubsetOf('[1, 2, 3]'); // pass
 
-// equals (== comparison) 
+// equals (== comparison)
 Assert::that('foo')->equals('foo'); // pass
 Assert::that('6')->equals(6); // pass
 Assert::that('foo')->equals('bar'); // fail
@@ -192,6 +192,22 @@ Assert::that('foo')->isNot('foo'); // fail
 Assert::that(6)->isNot(6); // fail
 Assert::that('foo')->isNot('bar'); // pass
 Assert::that(6)->isNot('6'); // pass
+
+// boolean (===)
+Assert::that(true)->isTrue(); // pass
+Assert::that(false)->isTrue(); // fail
+Assert::that(true)->isFalse(); // fail
+Assert::that(false)->isFalse(); // pass
+
+// boolean (==)
+Assert::that(1)->isTruthy(); // pass
+Assert::that(new \stdClass())->isTruthy(); // pass
+Assert::that('text')->isTruthy(); // pass
+Assert::that(null)->isTruthy(); // fail
+Assert::that(0)->isFalsy(); // pass
+Assert::that(null)->isFalsy(); // pass
+Assert::that('')->isFalsy(); // pass
+Assert::that(1)->isFalsy(); // fail
 
 // instanceof
 Assert::that($object)->isInstanceOf(Some::class);
@@ -368,7 +384,7 @@ use Zenstruck\Assert\AssertionFailed;
 class StringContains
 {
     public function __construct(private string $haystack, private string $needle) {}
-    
+
     public function __invoke(): void
     {
         if (!str_contains($this->haystack, $this->needle)) {
@@ -404,7 +420,7 @@ use Zenstruck\Assert\Assertion\Negatable;
 class StringContains implements Negatable
 {
     public function __construct(private string $haystack, private string $needle) {}
-    
+
     public function __invoke(): void
     {
         if (!str_contains($this->haystack, $this->needle)) {
@@ -414,7 +430,7 @@ class StringContains implements Negatable
             ]);
         }
     }
-    
+
     public function notFailure(): AssertionFailed
     {
         return new AssertionFailed(

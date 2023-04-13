@@ -30,6 +30,10 @@ final class ContainsAssertion extends EvaluableAssertion
      */
     public function __construct($needle, $haystack, ?string $message = null, array $context = [])
     {
+        if (null === $haystack) {
+            $haystack = (string) $haystack;
+        }
+
         if (!\is_scalar($haystack) && !\is_iterable($haystack)) {
             throw new \InvalidArgumentException(\sprintf('$haystack must be iterable or scalar, "%s" given.', \get_debug_type($haystack)));
         }
