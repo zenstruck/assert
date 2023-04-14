@@ -154,30 +154,32 @@ final class Expectation
 
     /**
      * Assert the expectation value contains the expected $needle. If the expectation
-     * value is a string, str_contains() is used, if it's iterable, in_array() (strict)
+     * value is a string, str_contains() is used, if it's iterable, in_array()
      * is used.
      *
      * @param mixed       $needle
      * @param string|null $message Available context: {needle}, {haystack}
+     * @param bool        $strict  Use in_array() strict comparison or case-sensitive str_contains()
      */
-    public function contains($needle, ?string $message = null, array $context = []): self
+    public function contains($needle, ?string $message = null, array $context = [], bool $strict = true): self
     {
-        Assert::run(new ContainsAssertion($needle, $this->value, $message, $context));
+        Assert::run(new ContainsAssertion($needle, $this->value, $message, $context, $strict));
 
         return $this;
     }
 
     /**
      * Assert the expectation value does NOT contain the expected $needle. If the expectation
-     * value is a string, str_contains() is used, if it's iterable, in_array() (strict)
+     * value is a string, str_contains() is used, if it's iterable, in_array()
      * is used.
      *
      * @param mixed       $needle
      * @param string|null $message Available context: {needle}, {haystack}
+     * @param bool        $strict  Use in_array() strict comparison or case-sensitive str_contains()
      */
-    public function doesNotContain($needle, ?string $message = null, array $context = []): self
+    public function doesNotContain($needle, ?string $message = null, array $context = [], bool $strict = true): self
     {
-        Assert::not(new ContainsAssertion($needle, $this->value, $message, $context));
+        Assert::not(new ContainsAssertion($needle, $this->value, $message, $context, $strict));
 
         return $this;
     }
