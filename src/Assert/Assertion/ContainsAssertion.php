@@ -27,7 +27,7 @@ final class ContainsAssertion extends EvaluableAssertion
      * @param iterable|scalar $haystack scalar: will assert contains needle
      *                                  iterable: will assert needle is one of the elements
      * @param string|null     $message  Available context: {needle}, {haystack}
-     * @param bool            $strict  Use in_array() strict comparison or case-sensitive str_contains()
+     * @param bool            $strict   Use in_array() strict comparison or case-sensitive str_contains()
      */
     public function __construct($needle, $haystack, ?string $message = null, array $context = [], private bool $strict = true)
     {
@@ -56,7 +56,7 @@ final class ContainsAssertion extends EvaluableAssertion
         }
 
         if (\is_scalar($this->haystack)) {
-            return false !== \stripos((string) $this->haystack, (string) $this->needle);
+            return false !== \mb_stripos((string) $this->haystack, (string) $this->needle);
         }
 
         $array = $this->haystack instanceof \Traversable ? \iterator_to_array($this->haystack) : $this->haystack;
