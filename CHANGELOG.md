@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [v1.4.0](https://github.com/zenstruck/assert/releases/tag/v1.4.0)
+
+April 17th, 2023 - [v1.3.0...v1.4.0](https://github.com/zenstruck/assert/compare/v1.3.0...v1.4.0)
+
+* d771025 feat: non-strict `ContainsAssertion` option (#25) by @kbond
+* ea5e3f0 fix: allow ContainsAssertion "haystack" to be null (#24) by @kbond
+* 3aa3209 feat: add `Expectation::isTruthy()/isFalsy()` (#24) by @kbond
+* d5f5ac1 feat: add `Expectation::isTrue()/isFalse()` (#24) by @kbond
+
 ## [v1.3.0](https://github.com/zenstruck/assert/releases/tag/v1.3.0)
 
 January 23rd, 2023 - [v1.2.0...v1.3.0](https://github.com/zenstruck/assert/compare/v1.2.0...v1.3.0)
