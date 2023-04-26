@@ -408,4 +408,28 @@ final class Expectation
 
         return $this;
     }
+
+    /**
+     * Json decodes the current value and returns a new instance
+     * wrapping the decoded value.
+     *
+     * Fails if not a valid json string.
+     */
+    public function isJson(): self
+    {
+        if (!\is_string($this->value)) {
+            Assert::fail('"{value}" is not a string.', ['value' => $this->value]);
+        }
+
+        // TODO: use \JSON_THROW_ON_ERROR once min PHP >= 7.3
+        $decoded = \json_decode($this->value, true);
+
+        if (\JSON_ERROR_NONE !== \json_last_error()) {
+            Assert::fail('"{value}" is not a json string.', ['value' => $this->value]);
+        }
+
+        Assert::pass();
+
+        return new self($decoded);
+    }
 }

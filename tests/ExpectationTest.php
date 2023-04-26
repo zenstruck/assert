@@ -13,6 +13,7 @@ namespace Zenstruck\Assert\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Zenstruck\Assert;
+use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Tests\Fixture\CountableObject;
 use Zenstruck\Assert\Tests\Fixture\IterableObject;
 use Zenstruck\Assert\Type;
@@ -827,6 +828,37 @@ final class ExpectationTest extends TestCase
         yield [[], Type::json(), '(array:empty)'];
         yield [new \stdClass(), Type::json(), 'stdClass'];
         yield ['foo', Type::json()];
+    }
+
+    /**
+     * @test
+     */
+    public function is_json(): void
+    {
+        $this->assertSuccess(6, function() {
+            Assert::that('6')->isJson()->is(Type::int())->isGreaterThan(5);
+            Assert::that('[6, 7]')->isJson()->contains(7)->doesNotContain(5);
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function is_json_failure(): void
+    {
+        $this->assertFails('"stdClass" is not a string.', function() {
+            try {
+                Assert::that(new \stdClass())->isJson();
+            } catch (AssertionFailed $e) {
+            }
+        });
+
+        $this->assertFails('"foo" is not a json string.', function() {
+            try {
+                Assert::that('foo')->isJson();
+            } catch (AssertionFailed $e) {
+            }
+        });
     }
 
     private function assertSuccess(int $expectedCount, callable $what): self
