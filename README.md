@@ -343,6 +343,68 @@ Assert::that(['foo', 'bar'])
 ;
 ```
 
+### HTML Expectations
+
+> **Note**: These expectations require the `zenstruck/assert-html` package. Install
+> with `composer require --dev zenstruck/assert-html`.
+
+```php
+use Zenstruck\Assert;
+
+Assert::html($someHtmlString)
+    ->contains('h1 title')
+    ->doesNotContain('invalid text')
+    ->containsIn('h1', 'title')
+    ->doesNotContainIn('h1', 'invalid text')
+    ->hasElement('h1')
+    ->doesNotHaveElement('h2')
+    ->hasElementCount('ul li', 2)
+
+    // head assertions
+    ->containsIn('title', 'meta title')
+    ->attributeContains('meta[name="description"]', 'content', 'meta')
+    ->attributeDoesNotContain('meta[name="description"]', 'content', 'invalid')
+    ->attributeContains('html', 'lang', 'en')
+
+    // form assertions
+    ->fieldEquals('Input 1', 'input 1')
+    ->fieldEquals('input1', 'input 1')
+    ->fieldEquals('input_1', 'input 1')
+    ->fieldDoesNotEqual('Input 1', 'invalid')
+    ->fieldDoesNotEqual('input1', 'invalid')
+    ->fieldDoesNotEqual('input_1', 'invalid')
+    ->fieldChecked('Input 3')
+    ->fieldChecked('input3')
+    ->fieldChecked('input_3')
+    ->fieldNotChecked('Input 2')
+    ->fieldNotChecked('input2')
+    ->fieldNotChecked('input_2')
+    ->fieldSelected('Input 4', 'option 1')
+    ->fieldSelected('input4', 'option 1')
+    ->fieldSelected('input_4', 'option 1')
+    ->fieldSelected('Input 7', 'option 1')
+    ->fieldSelected('input7', 'option 1')
+    ->fieldSelected('input_7[]', 'option 1')
+    ->fieldSelected('Input 7', 'option 3')
+    ->fieldSelected('input7', 'option 3')
+    ->fieldSelected('input_7[]', 'option 3')
+    ->fieldNotSelected('Input 4', 'option 2')
+    ->fieldNotSelected('input4', 'option 2')
+    ->fieldNotSelected('input_4', 'option 2')
+    ->fieldNotSelected('Input 7', 'option 2')
+    ->fieldNotSelected('input7', 'option 2')
+    ->fieldNotSelected('input_7[]', 'option 2')
+    ->fieldNotSelected('input_8', 'option 1')
+    ->fieldSelected('input_8', 'option 2')
+    ->fieldNotChecked('Radio 1')
+    ->fieldNotChecked('radio1')
+    ->fieldNotChecked('Radio 3')
+    ->fieldNotChecked('radio3')
+    ->fieldChecked('Radio 2')
+    ->fieldChecked('radio2')
+;
+```
+
 ## `AssertionFailed` Exception
 
 When triggering a failed assertion, it is important to provide a useful failure

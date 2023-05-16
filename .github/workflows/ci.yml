@@ -6,18 +6,55 @@ on:
   schedule:
     - cron: '0 0 1,16 * *'
 
+env:
+  COMPOSER_ROOT_VERSION: 1.x-dev
+
 jobs:
-  tests:
-    uses: zenstruck/.github/.github/workflows/php-test.yml@main
+  test:
+    name: PHP ${{ matrix.php }}, ${{ matrix.deps }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ 8.0, 8.1, 8.2 ]
+        deps: [ highest ]
+        include:
+          - php: 8.0
+            deps: lowest
+    steps:
+      - uses: zenstruck/.github@php-test-symfony
+        with:
+          php: ${{ matrix.php }}
+          deps: ${{ matrix.deps }}
 
   code-coverage:
-    uses: zenstruck/.github/.github/workflows/php-coverage-codecov.yml@main
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zenstruck/.github@php-coverage-codecov
+        with:
+          php: 8.2
 
   composer-validate:
     uses: zenstruck/.github/.github/workflows/php-composer-validate.yml@main
 
   sca:
-    uses: zenstruck/.github/.github/workflows/php-stan.yml@main
+    name: Static Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          coverage: none
+
+      - name: Install Dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan --error-format=github
 
   fixcs:
     name: Run php-cs-fixer

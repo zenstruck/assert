@@ -253,4 +253,19 @@ final class AssertTest extends TestCase
         $this->assertSame('override message', $this->handler->failures()[1]->getMessage());
         $this->assertSame('override message value RuntimeException exception message', $this->handler->failures()[2]->getMessage());
     }
+
+    /**
+     * @test
+     */
+    public function html(): void
+    {
+        $this->assertSame(0, $this->handler->successCount());
+
+        Assert::html('<html><body><h1>hello</h1></body></html>')
+            ->contains('hello')
+            ->containsIn('h1', 'hello')
+        ;
+
+        $this->assertSame(2, $this->handler->successCount());
+    }
 }

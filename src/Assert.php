@@ -15,6 +15,7 @@ use Zenstruck\Assert\Assertion\Negatable;
 use Zenstruck\Assert\AssertionFailed;
 use Zenstruck\Assert\Expectation;
 use Zenstruck\Assert\Handler;
+use Zenstruck\Assert\HtmlExpectation;
 use Zenstruck\Assert\Not;
 
 /**
@@ -141,6 +142,15 @@ final class Assert
     public static function that($value): Expectation
     {
         return new Expectation($value);
+    }
+
+    public static function html(string $value): HtmlExpectation
+    {
+        if (!\class_exists(HtmlExpectation::class)) {
+            throw new \LogicException('zenstruck/assert-html is required to use the HTML expectation (composer require --dev zenstruck/assert-html).');
+        }
+
+        return new HtmlExpectation($value);
     }
 
     /**

@@ -19,7 +19,8 @@
     "require-dev": {
         "phpstan/phpstan": "^1.4",
         "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^6.2"
+        "symfony/phpunit-bridge": "^6.2",
+        "zenstruck/assert-html": "^0.2.1"
     },
     "config": {
         "preferred-install": "dist",
