@@ -25,6 +25,6 @@ trait ResetHandler
     {
         $property = (new \ReflectionClass(Assert::class))->getProperty('handler');
         $property->setAccessible(true);
-        $property->setValue(null);
+        $property->setValue(null, null);
     }
 }
