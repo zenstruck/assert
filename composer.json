@@ -14,12 +14,12 @@
     "require": {
         "php": ">=8.0",
         "symfony/polyfill-php81": "^1.23",
-        "symfony/var-exporter": "^5.4|^6.0"
+        "symfony/var-exporter": "^5.4|^6.0|^7.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.4",
         "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^6.2"
+        "symfony/phpunit-bridge": "^6.3"
     },
     "config": {
         "preferred-install": "dist",
