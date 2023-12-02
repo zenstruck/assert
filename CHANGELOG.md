@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.5.0](https://github.com/zenstruck/assert/releases/tag/v1.5.0)
+
+December 2nd, 2023 - [v1.4.0...v1.5.0](https://github.com/zenstruck/assert/compare/v1.4.0...v1.5.0)
+
+* 2fc6d06 minor: allow Symfony 7.0 (#26) by @kbond
+
 ## [v1.4.0](https://github.com/zenstruck/assert/releases/tag/v1.4.0)
 
 April 17th, 2023 - [v1.3.0...v1.4.0](https://github.com/zenstruck/assert/compare/v1.3.0...v1.4.0)
