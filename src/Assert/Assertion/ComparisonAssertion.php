@@ -144,7 +144,7 @@ final class ComparisonAssertion extends EvaluableAssertion
                 'Expected "(%s) {actual}" to be %s "(%s) {expected}".',
                 \get_debug_type($this->actual),
                 $this->comparison,
-                \get_debug_type($this->expected)
+                \get_debug_type($this->expected),
             );
         }
 

@@ -22,7 +22,7 @@ use Zenstruck\Assert\Type;
  */
 final class ExpectationTest extends TestCase
 {
-    use HasTraceableHandler;
+    use Assert\Tests\HasTraceableHandler;
 
     /**
      * @test
@@ -46,15 +46,15 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "(array:list)" to be empty but its count is 1.', function() { Assert::that(['foo'])->isEmpty(); })
             ->assertFails(
                 \sprintf('Expected "%s" to be empty but its count is 2.', CountableObject::class),
-                function() { Assert::that(new CountableObject(2))->isEmpty(); }
+                function() { Assert::that(new CountableObject(2))->isEmpty(); },
             )
             ->assertFails(
                 \sprintf('Expected "%s" to be empty but its count is 2.', IterableObject::class),
-                function() { Assert::that(IterableObject::withCount(2))->isEmpty(); }
+                function() { Assert::that(IterableObject::withCount(2))->isEmpty(); },
             )
             ->assertFails(
                 'custom failure for 1 with value',
-                function() { Assert::that(1)->isEmpty('custom failure for {actual} with {custom}', ['custom' => 'value']); }
+                function() { Assert::that(1)->isEmpty('custom failure for {actual} with {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -81,15 +81,15 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "(array:empty)" to not be empty.', function() { Assert::that([])->isNotEmpty(); })
             ->assertFails(
                 \sprintf('Expected "%s" to not be empty.', CountableObject::class),
-                function() { Assert::that(new CountableObject(0))->isNotEmpty(); }
+                function() { Assert::that(new CountableObject(0))->isNotEmpty(); },
             )
             ->assertFails(
                 \sprintf('Expected "%s" to not be empty.', IterableObject::class),
-                function() { Assert::that(IterableObject::withCount(0))->isNotEmpty(); }
+                function() { Assert::that(IterableObject::withCount(0))->isNotEmpty(); },
             )
             ->assertFails(
                 'custom NOT failure for 0 with value',
-                function() { Assert::that(0)->isNotEmpty('custom NOT failure for {actual} with {custom}', ['custom' => 'value']); }
+                function() { Assert::that(0)->isNotEmpty('custom NOT failure for {actual} with {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -113,15 +113,15 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected the count of EmptyIterator to be 1 but got 0.', function() { Assert::that(new \EmptyIterator())->hasCount(1); })
             ->assertFails(
                 \sprintf('Expected the count of %s to be 1 but got 3.', CountableObject::class),
-                function() { Assert::that(new CountableObject(3))->hasCount(1); }
+                function() { Assert::that(new CountableObject(3))->hasCount(1); },
             )
             ->assertFails(
                 \sprintf('Expected the count of %s to be 1 but got 2.', IterableObject::class),
-                function() { Assert::that(IterableObject::withCount(2))->hasCount(1); }
+                function() { Assert::that(IterableObject::withCount(2))->hasCount(1); },
             )
             ->assertFails(
                 'fail 1 2 (array:list) value',
-                function() { Assert::that([1, 2])->hasCount(1, 'fail {expected} {actual} {haystack} {custom}', ['custom' => 'value']); }
+                function() { Assert::that([1, 2])->hasCount(1, 'fail {expected} {actual} {haystack} {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -145,15 +145,15 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected the count of EmptyIterator to not be 0.', function() { Assert::that(new \EmptyIterator())->doesNotHaveCount(0); })
             ->assertFails(
                 \sprintf('Expected the count of %s to not be 3.', CountableObject::class),
-                function() { Assert::that(new CountableObject(3))->doesNotHaveCount(3); }
+                function() { Assert::that(new CountableObject(3))->doesNotHaveCount(3); },
             )
             ->assertFails(
                 \sprintf('Expected the count of %s to not be 2.', IterableObject::class),
-                function() { Assert::that(IterableObject::withCount(2))->doesNotHaveCount(2); }
+                function() { Assert::that(IterableObject::withCount(2))->doesNotHaveCount(2); },
             )
             ->assertFails(
                 'fail 2 2 (array:list) value',
-                function() { Assert::that([1, 2])->doesNotHaveCount(2, 'fail {expected} {actual} {haystack} {custom}', ['custom' => 'value']); }
+                function() { Assert::that([1, 2])->doesNotHaveCount(2, 'fail {expected} {actual} {haystack} {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -185,7 +185,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "(array:list)" to contain "3".', function() { Assert::that([1, 2])->contains('3', strict: false); })
             ->assertFails(
                 'fail 3 (array:list) value',
-                function() { Assert::that([1, 2])->contains(3, 'fail {needle} {haystack} {custom}', ['custom' => 'value']); }
+                function() { Assert::that([1, 2])->contains(3, 'fail {needle} {haystack} {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -216,7 +216,7 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "(array:list)" to not contain "(array:list)".', function() { Assert::that([null, ['foo']])->doesNotContain(['foo']); })
             ->assertFails(
                 'fail 2 (array:list) value',
-                function() { Assert::that([1, 2])->doesNotContain(2, 'fail {needle} {haystack} {custom}', ['custom' => 'value']); }
+                function() { Assert::that([1, 2])->doesNotContain(2, 'fail {needle} {haystack} {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -317,7 +317,7 @@ final class ExpectationTest extends TestCase
                 function() { Assert::that(new CountableObject(3))->equals(new CountableObject(2)); })
             ->assertFails(
                 'fail foo bar value',
-                function() { Assert::that('foo')->equals('bar', 'fail {actual} {expected} {custom}', ['custom' => 'value']); }
+                function() { Assert::that('foo')->equals('bar', 'fail {actual} {expected} {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -342,11 +342,11 @@ final class ExpectationTest extends TestCase
             ->assertFails('Expected "5" to not be equal to "5".', function() { Assert::that(5)->isNotEqualTo('5'); })
             ->assertFails(
                 \sprintf('Expected "%1$s" to not be equal to "%1$s".', CountableObject::class),
-                function() { Assert::that(new CountableObject(3))->isNotEqualTo(new CountableObject(3)); }
+                function() { Assert::that(new CountableObject(3))->isNotEqualTo(new CountableObject(3)); },
             )
             ->assertFails(
                 'fail foo foo value',
-                function() { Assert::that('foo')->isNotEqualTo('foo', 'fail {expected} {actual} {custom}', ['custom' => 'value']); }
+                function() { Assert::that('foo')->isNotEqualTo('foo', 'fail {expected} {actual} {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -555,15 +555,15 @@ final class ExpectationTest extends TestCase
         $this
             ->assertFails(
                 \sprintf('Expected "%s" to not be an instance of "%s".', __CLASS__, __CLASS__),
-                function() { Assert::that($this)->isNotInstanceOf(__CLASS__); }
+                function() { Assert::that($this)->isNotInstanceOf(__CLASS__); },
             )
             ->assertFails(
                 \sprintf('Expected "%s" to not be an instance of "%s".', __CLASS__, TestCase::class),
-                function() { Assert::that($this)->isNotInstanceOf(TestCase::class); }
+                function() { Assert::that($this)->isNotInstanceOf(TestCase::class); },
             )
             ->assertFails(
                 \sprintf('fail %s %s value', __CLASS__, TestCase::class),
-                function() { Assert::that($this)->isNotInstanceOf(TestCase::class, 'fail {actual} {expected} {custom}', ['custom' => 'value']); }
+                function() { Assert::that($this)->isNotInstanceOf(TestCase::class, 'fail {actual} {expected} {custom}', ['custom' => 'value']); },
             )
         ;
     }
@@ -582,7 +582,7 @@ final class ExpectationTest extends TestCase
 
         $this->assertFails(
             'Expected needle to be a subset of haystack.',
-            static function() {Assert::that(['foo' => 'bar'])->isSubsetOf(['bar' => 'foo']); }
+            static function() {Assert::that(['foo' => 'bar'])->isSubsetOf(['bar' => 'foo']); },
         );
     }
 
@@ -598,7 +598,7 @@ final class ExpectationTest extends TestCase
 
         $this->assertFails(
             'Expected haystack to have needle as subset.',
-            static function() {Assert::that(['foo' => 'bar'])->hasSubset(['bar' => 'foo']); }
+            static function() {Assert::that(['foo' => 'bar'])->hasSubset(['bar' => 'foo']); },
         );
     }
 
@@ -614,7 +614,7 @@ final class ExpectationTest extends TestCase
 
         $this->assertFails(
             'Expected needle not to be a subset of haystack.',
-            static function() {Assert::that(['foo' => 'bar'])->isNotSubsetOf(['foo' => 'bar', 'bar' => 'foo']); }
+            static function() {Assert::that(['foo' => 'bar'])->isNotSubsetOf(['foo' => 'bar', 'bar' => 'foo']); },
         );
     }
 
@@ -630,7 +630,7 @@ final class ExpectationTest extends TestCase
 
         $this->assertFails(
             'Expected haystack not to have needle as subset.',
-            static function() {Assert::that(['foo' => 'bar', 'bar' => 'foo'])->notHasSubset(['foo' => 'bar']); }
+            static function() {Assert::that(['foo' => 'bar', 'bar' => 'foo'])->notHasSubset(['foo' => 'bar']); },
         );
     }
 
@@ -645,14 +645,14 @@ final class ExpectationTest extends TestCase
             Assert::that(function() { throw new \RuntimeException('foo bar'); })->throws(\Exception::class, 'foo bar');
             Assert::that(function() { throw new \RuntimeException('foo bar'); })->throws(\Exception::class, 'foo');
             Assert::that(function() { throw new \RuntimeException(); })->throws(
-                function(\RuntimeException $e) {}
+                function(\RuntimeException $e) {},
             );
             Assert::that(function() { throw new \RuntimeException(); })->throws(
-                function(\Exception $e) {}
+                function(\Exception $e) {},
             );
             Assert::that(function() { throw new \RuntimeException('foo'); })->throws(
                 function(\Exception $e) {},
-                'foo'
+                'foo',
             );
 
             $actualException = new \RuntimeException();
@@ -660,7 +660,7 @@ final class ExpectationTest extends TestCase
             Assert::that(function() use ($actualException) { throw $actualException; })->throws(
                 function(\Exception $e) use ($actualException) {
                     $this->assertSame($e, $actualException);
-                }
+                },
             );
         });
 
@@ -740,7 +740,7 @@ final class ExpectationTest extends TestCase
             \sprintf('Expected "%s" to be of type %s but is %s.', $normalizedValue ?? $value, $type, \get_debug_type($value)),
             function() use ($value, $type) {
                 Assert::that($value)->is($type);
-            }
+            },
         );
     }
 
@@ -769,7 +769,7 @@ final class ExpectationTest extends TestCase
             \sprintf('Expected "%s" to NOT be of type %s.', $normalizedValue ?? $value, $type),
             function() use ($value, $type) {
                 Assert::that($value)->isNot($type);
-            }
+            },
         );
     }
 
@@ -842,8 +842,8 @@ final class ExpectationTest extends TestCase
                 'Expected %s successes but got %s (last failure: "%s").',
                 $expectedCount,
                 $this->handler->successCount(),
-                $this->handler->failureCount() ? $this->handler->lastFailureMessage() : 'no message'
-            )
+                $this->handler->failureCount() ? $this->handler->lastFailureMessage() : 'no message',
+            ),
         );
 
         return $this;

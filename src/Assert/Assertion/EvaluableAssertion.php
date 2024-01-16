@@ -60,7 +60,7 @@ abstract class EvaluableAssertion implements Negatable
     {
         return new AssertionFailed(
             $this->message ?? $defaultMessage,
-            \array_merge($this->defaultContext(), $this->context)
+            \array_merge($this->defaultContext(), $this->context),
         );
     }
 }

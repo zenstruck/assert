@@ -122,7 +122,7 @@ final class Assert
             self::run($e = new AssertionFailed(
                 $message ?? $e->getMessage(),
                 \array_merge(['exception' => $e, 'message' => $e->getMessage()], $context),
-                $e
+                $e,
             ));
 
             throw $e;

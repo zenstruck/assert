@@ -82,7 +82,7 @@ final class ArraySubsetAssertion extends EvaluableAssertion
         [$expected, $actual, $message] = match ($this->mode) {
             self::MODE_IS_SUBSET => [$this->needle, $this->haystack, 'Expected needle to be a subset of haystack.'],
             self::MODE_HAS_SUBSET => [$this->haystack, $this->needle, 'Expected haystack to have needle as subset.'],
-            default => throw new \LogicException("Mode {$this->mode} does not exist.")
+            default => throw new \LogicException("Mode {$this->mode} does not exist."),
         };
 
         $expected = $this->needleWasJson ? \json_encode($expected, \JSON_PRETTY_PRINT) : VarExporter::export($expected);

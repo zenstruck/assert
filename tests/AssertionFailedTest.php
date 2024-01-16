@@ -45,7 +45,7 @@ final class AssertionFailedTest extends TestCase
                 "string\nwith\n\rline\nbreak",
                 false,
                 true,
-            ]
+            ],
         );
 
         $this->assertSame(\sprintf('message 1 string 4.3 stdClass (null) (array:list) %s string with line break (false) (true)', self::SHORT), $exception->getMessage());

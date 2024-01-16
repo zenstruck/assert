@@ -78,7 +78,7 @@ final class ThrowsAssertion
             if (!$actual instanceof $this->expectedException) {
                 AssertionFailed::throw(
                     'Expected "{expected_exception}" to be thrown but got "{actual_exception}".',
-                    ['expected_exception' => $this->expectedException, 'actual_exception' => $actual]
+                    ['expected_exception' => $this->expectedException, 'actual_exception' => $actual],
                 );
             }
 
@@ -89,7 +89,7 @@ final class ThrowsAssertion
                         'actual_exception' => $this->expectedException,
                         'actual_message' => $actual->getMessage(),
                         'expected_message' => $this->expectedMessage,
-                    ]
+                    ],
                 );
             }
 
@@ -100,7 +100,7 @@ final class ThrowsAssertion
 
         AssertionFailed::throw(
             'No exception thrown. Expected "{expected_exception}".',
-            ['expected_exception' => $this->expectedException]
+            ['expected_exception' => $this->expectedException],
         );
     }
 }

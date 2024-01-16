@@ -104,7 +104,7 @@ final class PHPUnitHandlerTest extends TestCase
         } catch (AssertionFailedError $e) {
             $this->assertStringContainsString(
                 \sprintf("this fails %s (array:assoc) %s %s\n\nFailure Context:", AssertionFailedTest::SHORT, __CLASS__, NegatableAssertion::class),
-                $e->getMessage()
+                $e->getMessage(),
             );
             $this->assertStringContainsString(\sprintf("[string]\n'%s'", AssertionFailedTest::LONG), $e->getMessage());
             $this->assertStringContainsString("[array]\nArray &0 (\n    'an' => 'array'\n)", $e->getMessage());
@@ -137,7 +137,7 @@ final class PHPUnitHandlerTest extends TestCase
                 "-    'count' => 3",
                 "+    'count' => 2",
                 ' Zenstruck\\Assert\\Tests\\Fixture\\CountableObject Object (',
-            ]
+            ],
         );
 
         $this->assertNoComparison(function() { Assert::that(6)->is('bar'); });
