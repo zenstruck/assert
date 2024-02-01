@@ -22,7 +22,7 @@ use Zenstruck\Assert\Type;
  */
 final class ExpectationTest extends TestCase
 {
-    use Assert\Tests\HasTraceableHandler;
+    use HasTraceableHandler;
 
     /**
      * @test

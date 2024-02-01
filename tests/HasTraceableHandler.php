@@ -19,7 +19,7 @@ use Zenstruck\Assert\Tests\Fixture\TraceableHandler;
  */
 trait HasTraceableHandler
 {
-    use Assert\Tests\ResetHandler;
+    use ResetHandler;
 
     /** @var TraceableHandler */
     private $handler;

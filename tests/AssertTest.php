@@ -21,7 +21,7 @@ use Zenstruck\Assert\Tests\Fixture\NegatableAssertion;
  */
 final class AssertTest extends TestCase
 {
-    use Assert\Tests\HasTraceableHandler;
+    use HasTraceableHandler;
 
     /**
      * @test
