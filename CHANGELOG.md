@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [v1.5.1](https://github.com/zenstruck/assert/releases/tag/v1.5.1)
+
+October 28th, 2024 - [v1.5.0...v1.5.1](https://github.com/zenstruck/assert/compare/v1.5.0...v1.5.1)
+
+* aef1082 minor: fix test deprecations (#28) by @kbond
+* 0653be7 chore: keep releases lean (#27) by @raphaelstolt
+
 ## [v1.5.0](https://github.com/zenstruck/assert/releases/tag/v1.5.0)
 
 December 2nd, 2023 - [v1.4.0...v1.5.0](https://github.com/zenstruck/assert/compare/v1.4.0...v1.5.0)
