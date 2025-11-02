@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.6.0](https://github.com/zenstruck/assert/releases/tag/v1.6.0)
+
+November 2nd, 2025 - [v1.5.1...v1.6.0](https://github.com/zenstruck/assert/compare/v1.5.1...v1.6.0)
+
+* f555461 chore: allow Symfony 8 (#29) by @nikophil
+
 ## [v1.5.1](https://github.com/zenstruck/assert/releases/tag/v1.5.1)
 
 October 28th, 2024 - [v1.5.0...v1.5.1](https://github.com/zenstruck/assert/compare/v1.5.0...v1.5.1)
