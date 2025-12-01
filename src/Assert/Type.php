@@ -14,7 +14,7 @@ namespace Zenstruck\Assert;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class Type
+final class Type implements \Stringable
 {
     private const BOOL = 'bool';
     private const STRING = 'string';
