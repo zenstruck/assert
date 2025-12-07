@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [v1.7.0](https://github.com/zenstruck/assert/releases/tag/v1.7.0)
+
+December 7th, 2025 - [v1.6.0...v1.7.0](https://github.com/zenstruck/assert/compare/v1.6.0...v1.7.0)
+
+* 519c22c feat: require PHP 8.1+ (#30) by @kbond
+* acb9237 minor: update action references and adjust composer stability (#30) by @kbond
+
 ## [v1.6.0](https://github.com/zenstruck/assert/releases/tag/v1.6.0)
 
 November 2nd, 2025 - [v1.5.1...v1.6.0](https://github.com/zenstruck/assert/compare/v1.5.1...v1.6.0)
