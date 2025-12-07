@@ -31,5 +31,6 @@
     "autoload-dev": {
         "psr-4": { "Zenstruck\\Assert\\Tests\\": "tests/" }
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
