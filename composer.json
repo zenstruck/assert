@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.1",
         "symfony/polyfill-php81": "^1.23",
         "symfony/var-exporter": "^5.4|^6.0|^7.0|^8.0"
     },
@@ -31,5 +31,6 @@
     "autoload-dev": {
         "psr-4": { "Zenstruck\\Assert\\Tests\\": "tests/" }
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
