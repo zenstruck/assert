@@ -31,8 +31,8 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::run(function() {});
-        Assert::run(fn() => 'value');
+        Assert::run(static function() {});
+        Assert::run(static fn() => 'value');
 
         $this->assertSame(2, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
@@ -46,7 +46,7 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        Assert::run(function() { AssertionFailed::throw('message'); });
+        Assert::run(static function() { AssertionFailed::throw('message'); });
 
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(1, $this->handler->failureCount());
@@ -211,7 +211,7 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
 
-        $value = Assert::try(fn() => 'value');
+        $value = Assert::try(static fn() => 'value');
 
         $this->assertSame(1, $this->handler->successCount());
         $this->assertSame(0, $this->handler->failureCount());
@@ -227,19 +227,19 @@ final class AssertTest extends TestCase
         $this->assertSame(0, $this->handler->failureCount());
 
         try {
-            Assert::try(function() { throw new \RuntimeException('exception message'); });
+            Assert::try(static function() { throw new \RuntimeException('exception message'); });
         } catch (AssertionFailed $e) {
             $this->assertSame('exception message', $e->getMessage());
         }
 
         try {
-            Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message');
+            Assert::try(static function() { throw new \RuntimeException('exception message'); }, 'override message');
         } catch (AssertionFailed $e) {
             $this->assertSame('override message', $e->getMessage());
         }
 
         try {
-            Assert::try(function() { throw new \RuntimeException('exception message'); }, 'override message {context} {exception} {message}', ['context' => 'value']);
+            Assert::try(static function() { throw new \RuntimeException('exception message'); }, 'override message {context} {exception} {message}', ['context' => 'value']);
         } catch (AssertionFailed $e) {
             $this->assertSame('override message value RuntimeException exception message', $e->getMessage());
         }

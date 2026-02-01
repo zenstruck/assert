@@ -37,7 +37,7 @@ final class PHPUnitHandlerTest extends TestCase
 
         Assert::true(true, 'should not fail');
         Assert::false(false, 'should not fail');
-        Assert::run(function() {});
+        Assert::run(static function() {});
 
         $this->assertSame(3, PHPUnit::getCount() - $initialPHPUnitAssertionCount);
     }
@@ -123,16 +123,16 @@ final class PHPUnitHandlerTest extends TestCase
      */
     public function php_unit_displays_comparisons_if_applicable(): void
     {
-        $this->assertComparison(function() { Assert::that('foo')->is('bar'); }, ["-'bar'", "+'foo'"]);
-        $this->assertComparison(function() { Assert::that('foo')->equals('bar'); });
-        $this->assertComparison(function() { Assert::that('6')->is('bar'); });
-        $this->assertComparison(function() { Assert::that('6')->equals('bar'); });
-        $this->assertComparison(function() { Assert::that(['foo'])->is(['bar']); }, ["-    0 => 'bar'", "+    0 => 'foo'"]);
-        $this->assertComparison(function() { Assert::that(['foo'])->equals(['bar']); });
-        $this->assertComparison(function() { Assert::that(new \DateTime('yesterday'))->equals(new \DateTime()); });
-        $this->assertComparison(function() { Assert::that(new \DateTime('yesterday'))->equals(new \DateTimeImmutable()); });
+        $this->assertComparison(static function() { Assert::that('foo')->is('bar'); }, ["-'bar'", "+'foo'"]);
+        $this->assertComparison(static function() { Assert::that('foo')->equals('bar'); });
+        $this->assertComparison(static function() { Assert::that('6')->is('bar'); });
+        $this->assertComparison(static function() { Assert::that('6')->equals('bar'); });
+        $this->assertComparison(static function() { Assert::that(['foo'])->is(['bar']); }, ["-    0 => 'bar'", "+    0 => 'foo'"]);
+        $this->assertComparison(static function() { Assert::that(['foo'])->equals(['bar']); });
+        $this->assertComparison(static function() { Assert::that(new \DateTime('yesterday'))->equals(new \DateTime()); });
+        $this->assertComparison(static function() { Assert::that(new \DateTime('yesterday'))->equals(new \DateTimeImmutable()); });
         $this->assertComparison(
-            function() { Assert::that(new CountableObject(2))->equals(new CountableObject(3)); },
+            static function() { Assert::that(new CountableObject(2))->equals(new CountableObject(3)); },
             [
                 "-    'count' => 3",
                 "+    'count' => 2",
@@ -140,16 +140,16 @@ final class PHPUnitHandlerTest extends TestCase
             ],
         );
 
-        $this->assertNoComparison(function() { Assert::that(6)->is('bar'); });
-        $this->assertNoComparison(function() { Assert::that(['foo', 'bar'])->isNotEqualTo(['foo', 'bar']); });
-        $this->assertNoComparison(function() { Assert::that('6')->isNotEqualTo(6); });
-        $this->assertNoComparison(function() { Assert::that('6')->isNot('6'); });
-        $this->assertNoComparison(function() { Assert::that('6')->is(6); });
-        $this->assertNoComparison(function() { Assert::that(6)->isGreaterThan(7); });
-        $this->assertNoComparison(function() { Assert::that(new \DateTime('today'))->isGreaterThan(new \DateTime('tomorrow')); });
-        $this->assertNoComparison(function() { Assert::that(new CountableObject(2))->isNotEqualTo(new CountableObject(2)); });
-        $this->assertNoComparison(function() { Assert::that(new CountableObject(2))->is(new CountableObject(2)); });
-        $this->assertNoComparison(function() { Assert::that(new CountableObject(2))->is(new CountableObject(3)); });
+        $this->assertNoComparison(static function() { Assert::that(6)->is('bar'); });
+        $this->assertNoComparison(static function() { Assert::that(['foo', 'bar'])->isNotEqualTo(['foo', 'bar']); });
+        $this->assertNoComparison(static function() { Assert::that('6')->isNotEqualTo(6); });
+        $this->assertNoComparison(static function() { Assert::that('6')->isNot('6'); });
+        $this->assertNoComparison(static function() { Assert::that('6')->is(6); });
+        $this->assertNoComparison(static function() { Assert::that(6)->isGreaterThan(7); });
+        $this->assertNoComparison(static function() { Assert::that(new \DateTime('today'))->isGreaterThan(new \DateTime('tomorrow')); });
+        $this->assertNoComparison(static function() { Assert::that(new CountableObject(2))->isNotEqualTo(new CountableObject(2)); });
+        $this->assertNoComparison(static function() { Assert::that(new CountableObject(2))->is(new CountableObject(2)); });
+        $this->assertNoComparison(static function() { Assert::that(new CountableObject(2))->is(new CountableObject(3)); });
     }
 
     /**

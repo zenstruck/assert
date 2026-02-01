@@ -27,7 +27,7 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('When $exception is a callback, the first parameter must be type-hinted as the expected exception.');
 
-        new ThrowsAssertion(function() {}, function() {});
+        new ThrowsAssertion(static function() {}, static function() {});
     }
 
     /**
@@ -38,7 +38,7 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('When $exception is a callback, the first parameter must be type-hinted as the expected exception.');
 
-        new ThrowsAssertion(function() {}, function($exception) {});
+        new ThrowsAssertion(static function() {}, static function($exception) {});
     }
 
     /**
@@ -49,7 +49,7 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected exception must be an object or interface, "array" given.');
 
-        new ThrowsAssertion(function() {}, 'array');
+        new ThrowsAssertion(static function() {}, 'array');
     }
 
     /**
@@ -60,7 +60,7 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected exception must a string representation of a class or interface, "array" given.');
 
-        new ThrowsAssertion(function() {}, []);
+        new ThrowsAssertion(static function() {}, []);
     }
 
     /**
@@ -71,6 +71,6 @@ final class ThrowsAssertionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected exception must be an object or interface, "string" given.');
 
-        new ThrowsAssertion(function() {}, function(string $param) {});
+        new ThrowsAssertion(static function() {}, static function(string $param) {});
     }
 }
