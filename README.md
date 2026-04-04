@@ -343,6 +343,23 @@ Assert::that(['foo', 'bar'])
 ;
 ```
 
+### Json Expectations
+
+```php
+use Zenstruck\Assert;
+
+Assert::that('[4, 5, 6]')
+    ->isJson() // json_decode's the current value and starts a new expectation with this
+    ->contains(5)
+;
+
+Assert::that('5')
+    ->isJson() 
+    ->is(5)
+    ->isGreaterThan(4)
+;
+```
+
 ## `AssertionFailed` Exception
 
 When triggering a failed assertion, it is important to provide a useful failure
