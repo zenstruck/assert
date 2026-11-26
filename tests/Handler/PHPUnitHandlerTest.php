@@ -73,7 +73,7 @@ final class PHPUnitHandlerTest extends TestCase
             $this->expectException(AssertionFailedError::class);
             $this->expectExceptionMessage('Assertion wrapper failure');
 
-            Assert::try(fn() => throw new \RuntimeException('original failure'), 'Assertion wrapper failure');
+            Assert::try(static fn() => throw new \RuntimeException('original failure'), 'Assertion wrapper failure');
         } finally {
             $_SERVER = $server;
         }
