@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [v1.7.1](https://github.com/zenstruck/assert/releases/tag/v1.7.1)
+
+November 26th, 2026 - [v1.7.0...v1.7.1](https://github.com/zenstruck/assert/compare/v1.7.0...v1.7.1)
+
+* cd051b2 fix: handle missing `argv` in PHPUnit handler (#34) by @kbond
+* 664f31c Remove symfony/polyfill-php81 dependency (#32) by @brendt
+
 ## [v1.7.0](https://github.com/zenstruck/assert/releases/tag/v1.7.0)
 
 December 7th, 2025 - [v1.6.0...v1.7.0](https://github.com/zenstruck/assert/compare/v1.6.0...v1.7.0)
