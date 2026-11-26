@@ -64,6 +64,24 @@ final class PHPUnitHandlerTest extends TestCase
     /**
      * @test
      */
+    public function try_failure_without_server_argv_is_reported(): void
+    {
+        $server = $_SERVER;
+        unset($_SERVER['argv']);
+
+        try {
+            $this->expectException(AssertionFailedError::class);
+            $this->expectExceptionMessage('Assertion wrapper failure');
+
+            Assert::try(fn() => throw new \RuntimeException('original failure'), 'Assertion wrapper failure');
+        } finally {
+            $_SERVER = $server;
+        }
+    }
+
+    /**
+     * @test
+     */
     public function non_verbose_run_does_not_export_context(): void
     {
         if (PHPUnitHandler::isVerbose()) {
