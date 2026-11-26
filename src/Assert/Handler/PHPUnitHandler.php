@@ -38,7 +38,9 @@ final class PHPUnitHandler implements Handler
 
     public static function isVerbose(): bool
     {
-        return \in_array('--verbose', $_SERVER['argv'], true) || \in_array('-v', $_SERVER['argv'], true);
+        $arguments = $_SERVER['argv'] ?? [];
+
+        return \in_array('--verbose', $arguments, true) || \in_array('-v', $arguments, true);
     }
 
     public static function isSupported(): bool
